@@ -1,0 +1,36 @@
+# Archivos temporales del sistema
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editores e IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Backups y archivos antiguos
+*.bak
+*.old
+*.tmp
+*_backup.*
+*_old.*
+
+# Node / dependencies (por si acaso)
+node_modules/
+package-lock.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# Archivos de build
+dist/
+build/
+
+# Archivos sensibles
+.env
+.env.local
+credentials.json
+*.key

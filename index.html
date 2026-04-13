@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Seguimiento - CSJ Rama Judicial</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <span class="loading-spinner-text">Cargando datos desde Google Sheets...</span>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <img src="logo.png" alt="Rama Judicial" class="header-logo">
+                    <div class="header-text">
+                        <h1>Dashboard de Seguimiento del Proyecto</h1>
+                        <p class="subtitle">CSJ Rama Judicial Colombia 2025</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="edit-lock-btn locked" id="editLockBtn" onclick="toggleEditLock()" title="Clic para activar/desactivar la edición">
+                        <span class="edit-lock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                        <span class="edit-lock-text">Solo lectura</span>
+                    </button>
+                    <span class="data-source-badge local" id="dataSourceBadge">Cargando...</span>
+                    <div class="last-update">
+                        <span class="label">Última actualización:</span>
+                        <span class="value" id="lastUpdate">--</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- KPIs Section -->
+            <section class="kpi-bar">
+                <div class="kpi-bar-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <div class="kpi-bar-label">Porcentaje de avance</div>
+                <div class="kpi-bar-value" id="impactProgress">0%</div>
+                <div class="kpi-bar-track">
+                    <div class="kpi-bar-fill" id="impactProgressBar" style="width:0%"></div>
+                </div>
+                <div class="kpi-bar-subtitle">Avance ponderado por impacto contractual</div>
+            </section>
+
+            <!-- CPI Accordion (collapsed by default) -->
+            <section class="cpi-accordion" id="cpiAccordion">
+                <div class="cpi-accordion-header" onclick="toggleCpiAccordion()">
+                    <div class="cpi-accordion-left">
+                        <span class="cpi-accordion-arrow" id="cpiAccordionArrow">&#9654;</span>
+                        <span class="cpi-accordion-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </span>
+                        <span class="cpi-accordion-title">CPI · Cost Performance Index</span>
+                    </div>
+                    <div class="cpi-accordion-right">
+                        <span class="cpi-accordion-value">1.02</span>
+                        <span class="cpi-accordion-badge cpi-on-budget">Dentro del presupuesto</span>
+                    </div>
+                </div>
+                <div class="cpi-accordion-body" id="cpiAccordionBody" style="display:none">
+                    <div class="cpi-metric-grid">
+                        <div class="cpi-metric">
+                            <div class="cpi-metric-label">Índice de desempeño de costos</div>
+                            <div class="cpi-metric-value">1.02</div>
+                            <div class="cpi-metric-note">CPI = Valor ganado / Costo real</div>
+                        </div>
+                        <div class="cpi-metric">
+                            <div class="cpi-metric-label">Variación de inversión</div>
+                            <div class="cpi-metric-value cpi-slight-up">+1.8%</div>
+                            <div class="cpi-metric-note">Ligero incremento sobre lo proyectado</div>
+                        </div>
+                    </div>
+                    <p class="cpi-description">
+                        El proyecto se encuentra <strong>dentro del presupuesto contractual</strong>, con un ligero incremento en la inversión derivado de la ejecución de contrataciones adicionales que han sido requeridas para fortalecer el alcance del proyecto. Este incremento es marginal y no compromete la viabilidad económica del contrato; por el contrario, refleja un esfuerzo complementario orientado a garantizar la calidad y cobertura de los entregables comprometidos.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Report Button (visible only in edit mode) -->
+            <button class="btn-report-floating" id="btnReport" onclick="openReportModal()" title="Generar informe de corte" style="display:none">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Informe de corte
+            </button>
+
+            <!-- Stage Breakdown Section (ORIGINAL - oculta, conservada como respaldo) -->
+            <!--
+            <section class="stage-breakdown-section">
+                <div class="section-header">
+                    <h2>Desglose por Etapa Contractual</h2>
+                    <p class="section-subtitle">Comparación entre avance físico (cantidad de tareas) y avance por impacto (valor contractual)</p>
+                </div>
+                <div class="table-container">
+                    <table class="stage-table">
+                        <thead>
+                            <tr>
+                                <th>Etapa</th>
+                                <th class="text-center">Peso Contractual</th>
+                                <th class="text-center">Avance por Impacto</th>
+                                <th class="text-center">Aporte al Proyecto</th>
+                                <th class="text-center">Tareas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stageBreakdownBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            -->
+
+            <!-- Resumen de Entregables por Etapa (dinámico desde deliverables_data.json) -->
+            <section class="stage-breakdown-section">
+                <div class="section-header">
+                    <h2>Resumen por Etapa Contractual</h2>
+                    <p class="section-subtitle">Avance calculado automáticamente a partir del estado de los entregables</p>
+                </div>
+                <div class="table-container">
+                    <table class="stage-table">
+                        <thead>
+                            <tr>
+                                <th>Etapa</th>
+                                <th class="text-center">Peso Contractual</th>
+                                <th class="text-center">Avance por Impacto</th>
+                                <th class="text-center">Entregables</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deliverablesSummaryBody">
+                            <!-- Rows calculated dynamically from deliverables_data.json -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Deliverables Accordion Section -->
+            <section class="deliverables-section">
+                <div class="section-header">
+                    <h2>Detalle de Entregables por Etapa</h2>
+                    <p class="section-subtitle">Seguimiento detallado de entregables contractuales. Haga clic en un entregable para ver o editar su información.</p>
+                    <button class="btn-sync-sheets" onclick="syncToGoogleSheets()" title="Sincronizar todos los entregables con Google Sheets">Sincronizar con Google Sheets</button>
+                </div>
+                <div id="deliverablesAccordion" class="deliverables-accordion">
+                    <!-- Accordion items rendered dynamically -->
+                </div>
+            </section>
+
+            <!-- Gantt Chart Section -->
+            <section class="gantt-section">
+                <div class="section-header">
+                    <h2>Cronograma de Entregables</h2>
+                    <p class="section-subtitle">Visualización temporal de entregables por etapa. Haga clic en una barra para ver el detalle.</p>
+                </div>
+                <div class="gantt-container" id="ganttContainer">
+                    <!-- Gantt rendered dynamically -->
+                </div>
+                <div class="gantt-legend" id="ganttLegend"></div>
+            </section>
+
+            <!-- Charts Section (oculta, conservada como respaldo) -->
+            <section class="charts-section" style="display:none">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Distribución de Tareas por Estado</h3>
+                    </div>
+                    <div class="chart-content">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Progreso del Cronograma</h3>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <span class="legend-color planned"></span>
+                                <span>Planificado</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color actual"></span>
+                                <span>Real</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-content">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card full-width">
+                    <div class="chart-header">
+                        <h3>Comparación: Avance Físico vs Avance por Impacto</h3>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <span class="legend-color physical"></span>
+                                <span>Avance Físico (tareas)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color impact"></span>
+                                <span>Avance por Impacto (valor)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-content">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Timeline Section (oculta, conservada como respaldo) -->
+            <section class="timeline-section" style="display:none">
+                <div class="section-header">
+                    <h2>Línea de Tiempo del Proyecto</h2>
+                    <div class="timeline-filters">
+                        <button class="filter-btn active" data-status="all">Todas</button>
+                        <button class="filter-btn" data-status="CLOSED">Completadas</button>
+                        <button class="filter-btn" data-status="IN PROGRESS">En Progreso</button>
+                        <button class="filter-btn" data-status="TO DO">Pendientes</button>
+                    </div>
+                </div>
+                <div class="timeline-container" id="timelineContainer">
+                    <!-- Timeline items will be inserted here dynamically -->
+                </div>
+            </section>
+
+            <!-- Alerts Section (oculta, conservada como respaldo) -->
+            <section class="alerts-section" style="display:none">
+                <div class="section-header">
+                    <h2>Alertas y Observaciones</h2>
+                </div>
+                <div class="alerts-container" id="alertsContainer">
+                </div>
+            </section>
+
+            <!-- Risk Management Section -->
+            <section class="risk-management-section">
+                <div class="section-header">
+                    <h2>Gestión de Riesgos - Elementos en Observación</h2>
+                    <p class="section-subtitle">Riesgos identificados que se mantienen bajo monitoreo preventivo. A la fecha no se han materializado ni se han manifestado disparadores.</p>
+                </div>
+                <div class="risk-table-container">
+                    <table class="risk-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ID</th>
+                                <th class="text-center">Descripción</th>
+                                <th class="text-center">Categoría</th>
+                                <th class="text-center">Disparador</th>
+                                <th class="text-center">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="riskTableBody">
+                            <!-- Rendered dynamically from Google Sheets / defaults -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p>Dashboard desarrollado para el seguimiento del proyecto de consultoría - CSJ Rama Judicial Colombia 2026</p>
+        </footer>
+    </div>
+
+    <!-- Deliverable Modal -->
+    <div class="deliverable-modal-overlay" id="deliverableModal" onclick="if(event.target===this) closeDeliverableModal()">
+        <div class="deliverable-modal">
+            <div class="modal-header">
+                <div class="modal-header-info">
+                    <span class="modal-del-id" id="modalDelId"></span>
+                    <span class="modal-del-name" id="modalDelName"></span>
+                </div>
+                <button class="modal-close" onclick="closeDeliverableModal()">&times;</button>
+            </div>
+            <div class="unsaved-indicator" id="unsavedIndicator">Cambios sin guardar</div>
+            <div class="modal-body">
+                <div class="modal-context">
+                    <div class="context-row">
+                        <span class="context-label">Etapa:</span>
+                        <span id="modalDelStage"></span>
+                    </div>
+                    <div class="context-row">
+                        <span class="context-label">Producto:</span>
+                        <span id="modalDelProduct"></span>
+                    </div>
+                    <div class="context-row context-desc">
+                        <span class="context-label">Descripción:</span>
+                        <span id="modalDelDesc"></span>
+                    </div>
+                </div>
+
+                <div class="modal-progress-section">
+                    <span class="context-label">Avance:</span>
+                    <div class="modal-progress-bar">
+                        <div class="modal-progress-fill" id="modalDelProgressBar"></div>
+                    </div>
+                    <span class="modal-progress-value" id="modalDelProgress"></span>
+                </div>
+
+                <div class="modal-form">
+                    <!-- Cycles Section -->
+                    <div class="cycles-section" id="modalCyclesSection">
+                        <div class="cycles-header">
+                            <h4>Ciclos de produccion</h4>
+                            <button class="btn-add-cycle" id="btnAddCycle" type="button" onclick="addCycleToModal()">+ Agregar ciclo</button>
+                        </div>
+                        <div class="cycles-list" id="modalCyclesList"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="modalDelUrl">URL del repositorio</label>
+                            <input type="url" id="modalDelUrl" placeholder="https://...">
+                        </div>
+                        <div class="form-group">
+                            <label for="modalDelActividades">Actividades estimadas</label>
+                            <input type="number" id="modalDelActividades" min="1" step="1" placeholder="13">
+                        </div>
+                    </div>
+                    <div class="form-group full-width comments-section">
+                        <label>Observaciones</label>
+                        <div class="comments-list" id="modalCommentsList"></div>
+                        <div class="comment-add" id="commentAddSection">
+                            <textarea id="newCommentText" rows="2" placeholder="Escribir comentario..."></textarea>
+                            <button class="btn-add-comment" type="button" onclick="addComment()">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-history">
+                    <h4>Historial de cambios de estado</h4>
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th>Modificado por</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalDelHistoryBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeDeliverableModal()">Cancelar</button>
+                <button class="btn-save" id="btnSaveDeliverable" onclick="saveDeliverable()">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Modal (Informe de Corte) -->
+    <div class="report-modal-overlay" id="reportModal" onclick="if(event.target===this) closeReportModal()">
+        <div class="report-modal">
+            <div class="report-modal-header">
+                <h2>Informe de Corte</h2>
+                <div class="report-modal-actions">
+                    <button class="btn-report-action" onclick="copyReportToClipboard()" title="Copiar al portapapeles">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Copiar
+                    </button>
+                    <button class="report-modal-close" onclick="closeReportModal()">&times;</button>
+                </div>
+            </div>
+            <div class="report-modal-body">
+                <!-- Report Header Info -->
+                <div class="report-info-bar">
+                    <div class="report-info-item">
+                        <span class="report-info-label">Fecha de corte:</span>
+                        <span class="report-info-value" id="reportCutDate">--</span>
+                    </div>
+                    <div class="report-info-item">
+                        <span class="report-info-label">Comparar con:</span>
+                        <span id="baselineSelectorArea">Cargando...</span>
+                    </div>
+                    <div class="report-info-item" style="margin-left:auto">
+                        <button class="btn-save-baseline" onclick="saveBaseline()">+ Nueva línea base</button>
+                    </div>
+                </div>
+
+                <!-- 1. Avance físico acumulado -->
+                <div class="report-section">
+                    <h3>1. Avance físico acumulado de la ejecución</h3>
+                    <div class="report-kpi-grid">
+                        <div class="report-kpi-card">
+                            <div class="report-kpi-label">Avance por Impacto Contractual</div>
+                            <div class="report-kpi-value" id="reportImpactProgress">0%</div>
+                            <div class="report-kpi-bar"><div class="report-kpi-fill" id="reportImpactBar"></div></div>
+                        </div>
+                        <div class="report-kpi-card">
+                            <div class="report-kpi-label">Avance Físico (actividades)</div>
+                            <div class="report-kpi-value" id="reportPhysProgress">0%</div>
+                            <div class="report-kpi-bar"><div class="report-kpi-fill report-kpi-fill-phys" id="reportPhysBar"></div></div>
+                        </div>
+                    </div>
+                    <table class="report-table" id="reportStageTable">
+                        <thead>
+                            <tr>
+                                <th>Etapa</th>
+                                <th class="text-center">Peso</th>
+                                <th class="text-center">Avance Actual</th>
+                                <th class="text-center">Entregables</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportStageBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- 2. Variación del cronograma -->
+                <div class="report-section">
+                    <h3>2. Variación del cronograma (planeado / ejecutado)</h3>
+                    <div class="report-variance-summary" id="reportVarianceSummary">
+                        <span class="report-variance-badge" id="reportVarianceBadge">Sin línea base</span>
+                    </div>
+                    <table class="report-table" id="reportVarianceTable">
+                        <thead>
+                            <tr>
+                                <th>Etapa</th>
+                                <th class="text-center">Avance Planeado (LB)</th>
+                                <th class="text-center">Avance Ejecutado</th>
+                                <th class="text-center">Variación</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportVarianceBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- 3. Principales hitos cumplidos -->
+                <div class="report-section">
+                    <h3>3. Principales hitos cumplidos a la fecha</h3>
+                    <div class="report-milestones-list" id="reportMilestonesList">
+                        <p class="report-empty">No se han registrado hitos cumplidos.</p>
+                    </div>
+                </div>
+
+                <!-- 4. Alertas y riesgos -->
+                <div class="report-section">
+                    <h3>4. Alertas y riesgos particulares</h3>
+                    <div class="report-alerts-list" id="reportAlertsList"></div>
+                    <div class="report-risks-list" id="reportRisksList"></div>
+                </div>
+
+                <!-- Observaciones editables -->
+                <div class="report-section">
+                    <h3>Observaciones del informe</h3>
+                    <textarea class="report-observations" id="reportObservations" rows="4" placeholder="Escriba aquí las observaciones o ajustes narrativos para este informe de corte..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Configuration -->
+    <script src="config.js"></script>
+    <!-- Google Sheets API Client -->
+    <script src="sheets-api.js"></script>
+    <!-- Main JavaScript -->
+    <script src="app.js"></script>
+    <!-- Deliverables Management -->
+    <script src="deliverables.js"></script>
+</body>
+</html>

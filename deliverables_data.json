@@ -1,0 +1,1429 @@
+{
+    "metadata": {
+        "version": "1.0",
+        "lastUpdated": "2026-02-24"
+    },
+    "stages": [
+        {
+            "id": "1",
+            "name": "Planificación",
+            "products": [
+                {
+                    "id": "1.1",
+                    "name": "Plan General del Proyecto",
+                    "deliverables": [
+                        {
+                            "id": "1.1.1",
+                            "name": "Documento digital del Plan general del proyecto de consultoría",
+                            "description": "Plan maestro con objetivos, metodología, alcance\/EDT, cronograma, gobierno, roles (RACI), riesgos, comunicaciones, calidad, criterios de aceptación y recursos.",
+                            "status": "aprobado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2025-11-18",
+                            "lastStatusChange": "2026-02-26",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2025-10-29",
+                                    "status": "en_elaboracion",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-04",
+                                    "status": "enviado",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-18",
+                                    "status": "aprobado",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2026-02-26",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                },
+                                {
+                                    "date": "2026-02-26",
+                                    "status": "aprobado",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "1.1.2",
+                            "name": "Presentación digital del Plan general del proyecto",
+                            "description": "Versión tipo diapositivas para socialización y validación del plan.",
+                            "status": "aprobado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2025-11-18",
+                            "lastStatusChange": "2025-11-18",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2025-10-29",
+                                    "status": "en_elaboracion",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-04",
+                                    "status": "enviado",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-18",
+                                    "status": "aprobado",
+                                    "by": "Sistema"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "1.2",
+                    "name": "Diagnóstico y análisis de necesidades de formación",
+                    "deliverables": [
+                        {
+                            "id": "1.2.1",
+                            "name": "Documento digital de análisis de contexto y diagnóstico",
+                            "description": "Caracterización y diagnóstico de necesidades de formación\/capacitación en la Rama Judicial con enfoque diferencial, interseccional y de género.",
+                            "status": "aprobado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2025-11-25",
+                            "lastStatusChange": "2025-11-25",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2025-10-29",
+                                    "status": "en_elaboracion",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-24",
+                                    "status": "enviado",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-25",
+                                    "status": "aprobado",
+                                    "by": "Sistema"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "1.2.2",
+                            "name": "Informe digital de actividades y hallazgos",
+                            "description": "Actividades realizadas, información recolectada, análisis, conclusiones y recomendaciones.",
+                            "status": "aprobado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2025-11-25",
+                            "lastStatusChange": "2025-11-25",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2025-10-29",
+                                    "status": "en_elaboracion",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-24",
+                                    "status": "enviado",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-25",
+                                    "status": "aprobado",
+                                    "by": "Sistema"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "1.3",
+                    "name": "Valoración de Activos de Conocimiento e insumos de base",
+                    "deliverables": [
+                        {
+                            "id": "1.3.1",
+                            "name": "Documento digital de resultados de revisión",
+                            "description": "Resultados de la revisión de insumos\/activos, con análisis y conclusiones.",
+                            "status": "aprobado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2025-11-25",
+                            "lastStatusChange": "2025-11-25",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2025-10-29",
+                                    "status": "en_elaboracion",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-24",
+                                    "status": "enviado",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-25",
+                                    "status": "aprobado",
+                                    "by": "Sistema"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "1.3.2",
+                            "name": "Matriz digital de información sistematizada",
+                            "description": "Consolidado estructurado (inventario\/criterios\/estado).",
+                            "status": "aprobado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2025-11-25",
+                            "lastStatusChange": "2025-11-25",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2025-10-29",
+                                    "status": "en_elaboracion",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-24",
+                                    "status": "enviado",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-25",
+                                    "status": "aprobado",
+                                    "by": "Sistema"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "1.3.3",
+                            "name": "Carpeta compartida indizada",
+                            "description": "Repositorio organizado del inventario de recursos, catalogado según criterios de evaluación.",
+                            "status": "aprobado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2025-11-25",
+                            "lastStatusChange": "2025-11-25",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2025-10-29",
+                                    "status": "en_elaboracion",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-24",
+                                    "status": "enviado",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-25",
+                                    "status": "aprobado",
+                                    "by": "Sistema"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "1.3.4",
+                            "name": "Informe digital de avance (corte)",
+                            "description": "Estado de ejecución del contrato a la fecha de corte.",
+                            "status": "aprobado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2025-11-25",
+                            "lastStatusChange": "2025-11-25",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2025-11-24",
+                                    "status": "enviado",
+                                    "by": "Sistema"
+                                },
+                                {
+                                    "date": "2025-11-25",
+                                    "status": "aprobado",
+                                    "by": "Sistema"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "2",
+            "name": "Desarrollo curricular y diseño del ciclo de formación",
+            "products": [
+                {
+                    "id": "2.1",
+                    "name": "Propuesta del Ciclo de Formación y rutas de aprendizaje",
+                    "deliverables": [
+                        {
+                            "id": "2.1.1",
+                            "name": "Documento digital detallado del ciclo y rutas",
+                            "description": "Estructura completa del ciclo y rutas (componentes, contenidos, secuencia).",
+                            "status": "aprobado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-01-30",
+                            "lastStatusChange": "2026-02-26",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-26",
+                                    "status": "aprobado",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.1.2",
+                            "name": "Esquema gráfico del ciclo y rutas",
+                            "description": "Representación visual (mapa\/diagrama) de la estructura del ciclo.",
+                            "status": "en_revision",
+                            "responsible": "EJRLB",
+                            "dueDate": "2026-01-30",
+                            "lastStatusChange": "2026-02-26",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-26",
+                                    "status": "en_revision",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.1.3",
+                            "name": "Informe del taller de presentación\/validación",
+                            "description": "Resultados del taller, acuerdos y conclusiones.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-02-06",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.1.4",
+                            "name": "Infografía Sentencia T-016\/2022 e informe de incorporación",
+                            "description": "Pieza gráfica y explicación de cómo se integra al ciclo.",
+                            "status": "en_revision",
+                            "responsible": "EJRLB",
+                            "dueDate": "2026-01-30",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_revision",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.1.5",
+                            "name": "Informe digital de actividades y recomendaciones",
+                            "description": "Trazabilidad del proceso (acciones, análisis, conclusiones y recomendaciones).",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-02-06",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "2.2",
+                    "name": "Diseño Formativo",
+                    "deliverables": [
+                        {
+                            "id": "2.2.1",
+                            "name": "14 syllabus digitales (1 por espacio curricular)",
+                            "description": "Diseño de cada espacio (propósito, contenidos, metodología, evaluación, etc.).",
+                            "status": "en_ajuste",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-13",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-26",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                },
+                                {
+                                    "date": "2026-02-26",
+                                    "status": "no_iniciado",
+                                    "by": "Usuario"
+                                },
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_ajuste",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.2.2",
+                            "name": "14 guías didácticas digitales para discentes",
+                            "description": "Guías para estudiantes (orientaciones, actividades, recursos, evaluaciones).",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.2.3",
+                            "name": "Documento con 14 informes de talleres de validación",
+                            "description": "Evidencias\/resultados de validación por la Red de Formadores.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-13",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.2.4",
+                            "name": "Informe digital de actividades y recomendaciones",
+                            "description": "Registro analítico del trabajo de diseño formativo.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "2.3",
+                    "name": "Metodología innovadora",
+                    "deliverables": [
+                        {
+                            "id": "2.3.1",
+                            "name": "Documento digital del diseño de metodología innovadora",
+                            "description": "Definición metodológica (estrategia didáctica\/innovación).",
+                            "status": "en_revision",
+                            "responsible": "EJRLB",
+                            "dueDate": "2026-02-06",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_revision",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.3.2",
+                            "name": "Presentación digital de la metodología",
+                            "description": "Material para socializar y validar la metodología.",
+                            "status": "en_revision",
+                            "responsible": "EJRLB",
+                            "dueDate": "2026-02-06",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_revision",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.3.3",
+                            "name": "Informe digital de actividades y conclusiones",
+                            "description": "Soporte del proceso y resultados de diseño metodológico.",
+                            "status": "en_revision",
+                            "responsible": "EJRLB",
+                            "dueDate": "2026-02-06",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_revision",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "2.4",
+                    "name": "Mecanismos de monitoreo y seguimiento",
+                    "deliverables": [
+                        {
+                            "id": "2.4.1",
+                            "name": "Documento técnico de lineamientos",
+                            "description": "Lineamientos para monitoreo\/seguimiento del ciclo.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-13",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "Se envió un documento previo con la estructura propuesta tanto en términos de plugin como de elementos de monitoreo, luego de la aprobación de este documento se procederá a completar los lineamientos solicitados en este punto.",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.4.2",
+                            "name": "Instrumentos de recolección de información",
+                            "description": "Formatos\/herramientas para capturar datos (encuestas, listas, etc.).",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-20",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.4.3",
+                            "name": "Matriz de indicadores de gestión y resultado",
+                            "description": "KPIs\/indicadores con definición y forma de medición.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-20",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.4.4",
+                            "name": "Propuesta de tablero de control (dashboard) básico",
+                            "description": "Diseño de visualización para seguimiento.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-20",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.4.5",
+                            "name": "Protocolo de seguimiento y mejora continua",
+                            "description": "Ciclo de revisión, acciones correctivas y mejora.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-20",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.4.6",
+                            "name": "Informe de validación de mecanismos propuestos",
+                            "description": "Validación\/retroalimentación y ajustes.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-20",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "Esta validación ¿con qué equipo o personas debemos hacerla y específicamente qué se desea validar?",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.4.7",
+                            "name": "Informe digital de actividades y recomendaciones",
+                            "description": "Soporte integral del desarrollo de mecanismos.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-20",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "2.5",
+                    "name": "Diseño, estructuración y virtualización del entorno del ciclo",
+                    "deliverables": [
+                        {
+                            "id": "2.5.1",
+                            "name": "Documento de diseño del entorno virtual",
+                            "description": "Diseño del entorno (estructura, navegación, componentes).",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-20",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.5.2",
+                            "name": "Informe de pruebas de funcionalidad\/navegación\/interacción",
+                            "description": "Resultados de pruebas y hallazgos.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.5.3",
+                            "name": "Plan de ajustes y mejora del entorno",
+                            "description": "Backlog\/plan de optimización.",
+                            "status": "no_iniciado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "2.5.4",
+                            "name": "Guía técnica de implementación y mantenimiento",
+                            "description": "Cómo instalar\/operar\/mantener el entorno.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "2.5.5",
+                            "name": "5 piezas promocionales (marketing digital)",
+                            "description": "Materiales de comunicación optimizados para difusión.",
+                            "status": "no_iniciado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "",
+                            "observations": "Requerimos un espacio para determinar cuáles son los productos específicos y sus características",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "2.5.6",
+                            "name": "Informe digital de actividades y recomendaciones",
+                            "description": "Trazabilidad del trabajo de virtualización del entorno.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "2.6",
+                    "name": "Micrositio web temático",
+                    "deliverables": [
+                        {
+                            "id": "2.6.1",
+                            "name": "Documento de diseño funcional y gráfico",
+                            "description": "Arquitectura, diseño UI\/UX y lineamientos del micrositio.",
+                            "status": "en_elaboracion",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "2026-02-28",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": [
+                                {
+                                    "date": "2026-02-28",
+                                    "status": "en_elaboracion",
+                                    "by": "Usuario"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "2.6.2",
+                            "name": "Informe de pruebas y plan de ajustes",
+                            "description": "Resultados de pruebas (funcionalidad\/accesibilidad) y acciones correctivas.",
+                            "status": "no_iniciado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "",
+                            "observations": "Dependemos de la reunión con el aliado tecnológico de la EJRLB",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "2.6.3",
+                            "name": "Manual de administración y mantenimiento",
+                            "description": "Guía operativa para gestionar el micrositio.",
+                            "status": "no_iniciado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "2.6.4",
+                            "name": "Versión final del micrositio web temático",
+                            "description": "Entrega final implementada según especificaciones.",
+                            "status": "no_iniciado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "2.6.5",
+                            "name": "Informe digital de actividades y recomendaciones",
+                            "description": "Reporte integral del proceso del micrositio.",
+                            "status": "no_iniciado",
+                            "responsible": "Innovahub",
+                            "dueDate": "2026-03-27",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "3",
+            "name": "Virtualización de contenidos",
+            "products": [
+                {
+                    "id": "3.1",
+                    "name": "Guiones instruccionales",
+                    "deliverables": [
+                        {
+                            "id": "3.1.1",
+                            "name": "14 guiones instruccionales",
+                            "description": "Secuencia de contenidos, actividades y evaluaciones en el entorno virtual.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.1.2",
+                            "name": "14 informes de revisión\/concepto del experto temático",
+                            "description": "Visto bueno y observaciones por guion.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.1.3",
+                            "name": "Informe de ajustes a los 14 guiones",
+                            "description": "Registro de cambios según observaciones (expertos\/Escuela).",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.1.4",
+                            "name": "Manual técnico-pedagógico del ciclo en Moodle",
+                            "description": "Guía detallada de configuración y uso pedagógico en LMS.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.1.5",
+                            "name": "Manual de usuario (Admins\/Formadores\/Discentes)",
+                            "description": "Instructivo operativo por rol.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.1.6",
+                            "name": "Informe de lecciones aprendidas y mejores prácticas",
+                            "description": "Aprendizajes y recomendaciones de ejecución.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.1.7",
+                            "name": "Informe digital consolidado del trabajo",
+                            "description": "Reporte integral del componente (incluye recomendaciones\/LP\/MP).",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        }
+                    ]
+                },
+                {
+                    "id": "3.2",
+                    "name": "Herramientas de apoyo al aprendizaje",
+                    "deliverables": [
+                        {
+                            "id": "3.2.1",
+                            "name": "Banco de recursos interactivos",
+                            "description": "Colección de recursos interactivos para el ciclo.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.2.2",
+                            "name": "Documento con actividades interactivas y lúdicas",
+                            "description": "Catálogo\/detalle de actividades.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.2.3",
+                            "name": "Recursos de navegación guiada",
+                            "description": "Apoyos para orientar el recorrido del estudiante.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.2.4",
+                            "name": "Materiales descargables complementarios",
+                            "description": "Anexos\/recursos descargables.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.2.5",
+                            "name": "Repositorio estructurado de recursos",
+                            "description": "Repositorio organizado (carpetas, indexación).",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.2.6",
+                            "name": "Informe de validación pedagógica y técnica",
+                            "description": "Verificación de calidad y funcionamiento.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        }
+                    ]
+                },
+                {
+                    "id": "3.3",
+                    "name": "Configuración de espacios curriculares en Moodle",
+                    "deliverables": [
+                        {
+                            "id": "3.3.1",
+                            "name": "Informe con evidencias de 14 EVA configurados",
+                            "description": "Evidencias de implementación funcional en Moodle (ambiente de pruebas) y socialización con Escuela Judicial.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.3.2",
+                            "name": "Manual de usuario del entorno virtual (texto y video)",
+                            "description": "Guías de uso del EVA.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.3.3",
+                            "name": "Informe digital de actividades y recomendaciones",
+                            "description": "Reporte del proceso de configuración.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        }
+                    ]
+                },
+                {
+                    "id": "3.4",
+                    "name": "Integración de mecanismos de monitoreo y seguimiento",
+                    "deliverables": [
+                        {
+                            "id": "3.4.1",
+                            "name": "Evidencias de módulos LMS, alertas y dashboard",
+                            "description": "Evidencia de implementación de seguimiento, notificaciones y panel.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.4.2",
+                            "name": "Instrumentos de recolección de información",
+                            "description": "Instrumentos integrados\/ajustados para captura de datos.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.4.3",
+                            "name": "Repositorio del código fuente",
+                            "description": "Entrega técnica para mantenimiento\/evolución (comentado, librerías y dependencias).",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.4.4",
+                            "name": "Informe técnico, videos de demostración y socialización",
+                            "description": "Evidencia funcional y transferencia técnica.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.4.5",
+                            "name": "Manual de uso para administradores y tutores",
+                            "description": "Operación de seguimiento desde roles clave.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.4.6",
+                            "name": "Especificaciones técnicas de integración",
+                            "description": "Requisitos\/arquitectura de integración con sistema de seguimiento académico.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "3.4.7",
+                            "name": "Informe digital de avance (corte)",
+                            "description": "Estado de ejecución del contrato a la fecha de corte.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "4",
+            "name": "Pruebas e implementación",
+            "products": [
+                {
+                    "id": "4.1",
+                    "name": "Pruebas funcionales y de usabilidad",
+                    "deliverables": [
+                        {
+                            "id": "4.1.1",
+                            "name": "Plan de pruebas funcionales",
+                            "description": "Casos, alcance, criterios y metodología de pruebas.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.1.2",
+                            "name": "Informe de ejecución\/resultados de pruebas funcionales",
+                            "description": "Hallazgos, evidencias y resultados (consultor).",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.1.3",
+                            "name": "Protocolo de pruebas de usabilidad",
+                            "description": "Metodología e instrumentos para evaluar usabilidad.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.1.4",
+                            "name": "Informe de resultados de usabilidad",
+                            "description": "Resultados, análisis y conclusiones (consultor).",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.1.5",
+                            "name": "Informe de resultados y ajustes por prueba de usabilidad (EJRLB)",
+                            "description": "Cambios derivados de la prueba de usabilidad de la Escuela Judicial.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.1.6",
+                            "name": "Checklist de validación técnica y funcional",
+                            "description": "Lista de verificación final de conformidad.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        }
+                    ]
+                },
+                {
+                    "id": "4.2",
+                    "name": "Prueba piloto",
+                    "deliverables": [
+                        {
+                            "id": "4.2.1",
+                            "name": "Plan de implementación de prueba piloto",
+                            "description": "Alcance, cronograma y ejecución del piloto (ambiente consultor).",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.2.2",
+                            "name": "Registro de participantes del piloto",
+                            "description": "Base\/listado de participantes del piloto.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.2.3",
+                            "name": "Informe de evaluación del piloto",
+                            "description": "Resultados del piloto y evaluación del ambiente.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.2.4",
+                            "name": "Informe de ajustes y mejoras post-piloto",
+                            "description": "Plan\/registro de mejoras identificadas.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.2.5",
+                            "name": "Acta de cierre de la prueba piloto",
+                            "description": "Documento formal de cierre y conformidad.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        }
+                    ]
+                },
+                {
+                    "id": "4.3",
+                    "name": "Entrega de SCORM y apoyo para publicación",
+                    "deliverables": [
+                        {
+                            "id": "4.3.1",
+                            "name": "Documento de transferencia de PI y derechos de autor",
+                            "description": "Cesión\/transferencia de PI sobre espacios curriculares y entregables.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.3.2",
+                            "name": "14 paquetes SCORM funcionales (versión final)",
+                            "description": "Contenidos exportados en formato SCORM listos para LMS.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.3.3",
+                            "name": "Paquete comprimido del micrositio y script de importación",
+                            "description": "Entregable técnico para despliegue\/publicación.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.3.4",
+                            "name": "Guía de instalación\/despliegue de SCORM en Moodle",
+                            "description": "Instructivo técnico para cargar y operar paquetes.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.3.5",
+                            "name": "Acta de entrega y conformidad de SCORM",
+                            "description": "Aceptación formal de los SCORM.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "4.3.6",
+                            "name": "Acta de entrega y conformidad del micrositio web",
+                            "description": "Aceptación formal del micrositio.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "5",
+            "name": "Transferencia de conocimiento y cierre",
+            "products": [
+                {
+                    "id": "5.1",
+                    "name": "Capacitación a equipos internos de la Rama Judicial",
+                    "deliverables": [
+                        {
+                            "id": "5.1.1",
+                            "name": "Plan de capacitación y materiales",
+                            "description": "Programa y contenidos de capacitación para equipos internos.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "5.1.2",
+                            "name": "Registro de asistencia",
+                            "description": "Evidencias de participación en sesiones.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "5.1.3",
+                            "name": "Informe de capacitación realizada",
+                            "description": "Actividades, ejecución, conclusiones y recomendaciones.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "5.1.4",
+                            "name": "Informe digital de avance (corte)",
+                            "description": "Estado de ejecución del contrato a la fecha de corte.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "5.1.5",
+                            "name": "Informe final de ejecución (cierre contractual)",
+                            "description": "Consolidado final de cumplimiento, entregables y cierre.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        },
+                        {
+                            "id": "FAC",
+                            "name": "Facturación",
+                            "description": "Facturación del proyecto.",
+                            "status": "no_iniciado",
+                            "responsible": "",
+                            "dueDate": "",
+                            "lastStatusChange": "",
+                            "observations": "",
+                            "repositoryUrl": "",
+                            "history": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
