@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Seguimiento - CSJ Rama Judicial</title>
+
+    <!-- Base URL: hace que todas las rutas relativas se resuelvan contra el CDN -->
+    <base href="https://cdn.jsdelivr.net/gh/dyoma-web/drj@main/">
+
+    <!-- Estilos: los relativos se resuelven contra el CDN gracias al <base> -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Pantalla de carga mientras se descarga el contenido real */
+        .drj-bootstrap {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1e40af, #1e3a8a);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            z-index: 99999;
+        }
+        .drj-bootstrap .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: drj-spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+        @keyframes drj-spin { to { transform: rotate(360deg); } }
+        .drj-bootstrap .msg { font-size: 14px; opacity: 0.9; }
+        .drj-bootstrap .err { max-width: 600px; padding: 20px; text-align: center; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="drj-bootstrap" id="drjBootstrap">
+        <div class="spinner"></div>
+        <div class="msg">Cargando dashboard…</div>
+    </div>
+
+    <script>
+    (async function loadDashboard() {
+        const CDN = 'https://cdn.jsdelivr.net/gh/dyoma-web/drj@main/';
+        const bootstrap = document.getElementById('drjBootstrap');
+
+        function showError(msg) {
+            bootstrap.innerHTML = '<div class="err"><strong>No se pudo cargar el dashboard.</strong><br><br>' + msg + '<br><br>Intente recargar la página en unos segundos.</div>';
+        }
+
+        try {
+            // 1. Descargar el index.html completo desde el CDN
+            const res = await fetch(CDN + 'index.html?t=' + Date.now());
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const html = await res.text();
+
+            // 2. Parsear el HTML
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // 3. Extraer y remover los <script> del body (no se ejecutan al inyectar innerHTML)
+            const scriptTags = Array.from(doc.body.querySelectorAll('script'));
+            const scriptSrcs = scriptTags.map(s => s.src || s.getAttribute('src')).filter(Boolean);
+            scriptTags.forEach(s => s.remove());
+
+            // 4. Inyectar el cuerpo del documento (sin los scripts)
+            document.body.innerHTML = doc.body.innerHTML;
+
+            // 5. Cargar los scripts en orden, uno por uno
+            for (const rawSrc of scriptSrcs) {
+                // Si es URL absoluta (http/https), úsala tal cual
+                // Si es relativa, prepéndele el CDN
+                let src = rawSrc;
+                if (!/^https?:\/\//i.test(src)) {
+                    src = CDN + src.replace(/^\.?\//, '');
+                }
+                await new Promise((resolve, reject) => {
+                    const s = document.createElement('script');
+                    s.src = src;
+                    s.onload = resolve;
+                    s.onerror = () => reject(new Error('Error cargando ' + src));
+                    document.body.appendChild(s);
+                });
+            }
+
+            // 6. DOMContentLoaded ya disparó, así que ejecutamos la inicialización manualmente
+            if (typeof setupDirtyTracking === 'function') setupDirtyTracking();
+            if (typeof updateEditLockUI === 'function') updateEditLockUI();
+            if (typeof loadDeliverables === 'function') loadDeliverables();
+
+            // 7. Remover la pantalla de carga
+            bootstrap.remove();
+        } catch (err) {
+            console.error('[DRJ Loader]', err);
+            showError(err.message || String(err));
+        }
+    })();
+    </script>
+</body>
+</html>
