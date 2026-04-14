@@ -2874,4 +2874,46 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDirtyTracking();
     updateEditLockUI();
     loadDeliverables();
+    printSignature();
 });
+
+// ===================================
+// Firma del autor
+// ===================================
+function printSignature() {
+    const brand = 'background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:14px 22px;font-size:14px;font-weight:600;border-radius:6px 6px 0 0;font-family:Inter,sans-serif;';
+    const body  = 'background:#f9fafb;color:#374151;padding:14px 22px;font-size:12px;line-height:1.7;border-radius:0 0 6px 6px;border:1px solid #e5e7eb;border-top:none;font-family:Inter,sans-serif;';
+    const hint  = 'color:#1e40af;font-weight:600;';
+
+    console.log('%c Diseñado y construido por David Yomayusa ', brand);
+    console.log(
+        '%c Fullstack · UX/UI · Data-driven apps\n\n' +
+        '¿Te gusta lo que ves? Puedo ayudarte a construir algo así — o algo más ambicioso.\n\n' +
+        '→ david.yomayusa@innovahub.org\n' +
+        '→ Escribe %chireMe()%c  para más detalles.',
+        body, hint, body
+    );
+}
+
+// Easter egg — quien abra la consola y sea curioso, encontrará esto.
+window.hireMe = function() {
+    const title = 'background:#1e40af;color:#fff;padding:10px 18px;font-size:13px;font-weight:700;border-radius:4px;';
+    const line  = 'color:#374151;font-size:12px;line-height:1.8;';
+    const brand = 'color:#1e40af;font-weight:600;';
+
+    console.log('%c Hola 👋 ', title);
+    console.log(
+        '%cMe llamo David Yomayusa y construyo productos digitales con propósito:\n' +
+        '  • Dashboards y herramientas internas que la gente realmente usa\n' +
+        '  • Aplicaciones con foco en UX, accesibilidad y datos\n' +
+        '  • Integraciones, automatizaciones y backoffice a medida\n\n' +
+        'Este dashboard es un ejemplo: vanilla JS, Google Sheets como backend,\n' +
+        'deploy automático vía GitHub Pages. Sin frameworks innecesarios, solo\n' +
+        'lo que el problema necesita.\n\n' +
+        '%cSi tienes un proyecto en mente, escríbeme:%c\n' +
+        '  → david.yomayusa@innovahub.org\n\n' +
+        'Gracias por asomarte bajo el capó. Eso ya dice mucho de ti.',
+        line, brand, line
+    );
+    return '✨';
+};
