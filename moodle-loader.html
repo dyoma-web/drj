@@ -68,8 +68,10 @@
             const doc = parser.parseFromString(html, 'text/html');
 
             // 3. Extraer y remover los <script> del body (no se ejecutan al inyectar innerHTML)
+            // Usamos getAttribute('src') para obtener el valor CRUDO del atributo,
+            // porque .src lo resuelve contra la URL actual del documento (Moodle).
             const scriptTags = Array.from(doc.body.querySelectorAll('script'));
-            const scriptSrcs = scriptTags.map(s => s.src || s.getAttribute('src')).filter(Boolean);
+            const scriptSrcs = scriptTags.map(s => s.getAttribute('src')).filter(Boolean);
             scriptTags.forEach(s => s.remove());
 
             // 4. Inyectar el cuerpo del documento (sin los scripts)
