@@ -2881,39 +2881,43 @@ document.addEventListener('DOMContentLoaded', () => {
 // Firma del autor
 // ===================================
 function printSignature() {
-    const brand = 'background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:14px 22px;font-size:14px;font-weight:600;border-radius:6px 6px 0 0;font-family:Inter,sans-serif;';
-    const body  = 'background:#f9fafb;color:#374151;padding:14px 22px;font-size:12px;line-height:1.7;border-radius:0 0 6px 6px;border:1px solid #e5e7eb;border-top:none;font-family:Inter,sans-serif;';
-    const hint  = 'color:#1e40af;font-weight:600;';
+    // Estilos pensados para verse bien en tema claro Y oscuro.
+    // Usamos colores saturados con buen contraste sobre cualquier fondo.
+    const brand = 'background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:14px 22px;font-size:14px;font-weight:700;border-radius:6px;font-family:Inter,sans-serif;text-shadow:0 1px 2px rgba(0,0,0,0.2);';
+    const body  = 'color:#60a5fa;font-size:13px;line-height:1.7;font-family:Inter,sans-serif;';
+    const hint  = 'color:#fbbf24;font-weight:700;';
+    const soft  = 'color:#9ca3af;font-size:13px;line-height:1.7;font-family:Inter,sans-serif;';
 
     console.log('%c Diseñado y construido por David Yomayusa ', brand);
     console.log(
-        '%c Fullstack · UX/UI · Data-driven apps\n\n' +
-        '¿Te gusta lo que ves? Puedo ayudarte a construir algo así — o algo más ambicioso.\n\n' +
-        '→ david.yomayusa@innovahub.org\n' +
-        '→ Escribe %chireMe()%c  para más detalles.',
-        body, hint, body
+        '%cFullstack · UX/UI · Data-driven apps\n\n' +
+        '%c¿Te gusta lo que ves? Puedo ayudarte a construir algo así — o algo más ambicioso.\n\n' +
+        '%c→ david.yomayusa@innovahub.org\n' +
+        '→ Escribe %chireMe()%c para más detalles.',
+        body, soft, body, hint, body
     );
 }
 
 // Easter egg — quien abra la consola y sea curioso, encontrará esto.
 window.hireMe = function() {
-    const title = 'background:#1e40af;color:#fff;padding:10px 18px;font-size:13px;font-weight:700;border-radius:4px;';
-    const line  = 'color:#374151;font-size:12px;line-height:1.8;';
-    const brand = 'color:#1e40af;font-weight:600;';
+    const title = 'background:#1e40af;color:#fff;padding:10px 18px;font-size:14px;font-weight:700;border-radius:4px;text-shadow:0 1px 2px rgba(0,0,0,0.2);';
+    const line  = 'color:#9ca3af;font-size:13px;line-height:1.8;font-family:Inter,sans-serif;';
+    const blue  = 'color:#60a5fa;font-weight:600;font-size:13px;line-height:1.8;';
+    const gold  = 'color:#fbbf24;font-weight:700;font-size:13px;';
 
     console.log('%c Hola 👋 ', title);
     console.log(
-        '%cMe llamo David Yomayusa y construyo productos digitales con propósito:\n' +
+        '%cMe llamo %cDavid Yomayusa%c y construyo productos digitales con propósito:\n' +
         '  • Dashboards y herramientas internas que la gente realmente usa\n' +
         '  • Aplicaciones con foco en UX, accesibilidad y datos\n' +
         '  • Integraciones, automatizaciones y backoffice a medida\n\n' +
         'Este dashboard es un ejemplo: vanilla JS, Google Sheets como backend,\n' +
         'deploy automático vía GitHub Pages. Sin frameworks innecesarios, solo\n' +
         'lo que el problema necesita.\n\n' +
-        '%cSi tienes un proyecto en mente, escríbeme:%c\n' +
-        '  → david.yomayusa@innovahub.org\n\n' +
-        'Gracias por asomarte bajo el capó. Eso ya dice mucho de ti.',
-        line, brand, line
+        '%cSi tienes un proyecto en mente, escríbeme:\n' +
+        '%c  → david.yomayusa@innovahub.org\n\n' +
+        '%cGracias por asomarte bajo el capó. Eso ya dice mucho de ti.',
+        line, blue, line, gold, blue, line
     );
     return '✨';
 };
