@@ -3022,8 +3022,8 @@ body {
     width: 32px;
     height: 32px;
     border-radius: var(--border-radius-md);
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--success-color);
+    background: rgba(245, 158, 11, 0.12);
+    color: var(--warning-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3046,7 +3046,7 @@ body {
 .cpi-accordion-value {
     font-size: 1.4rem;
     font-weight: 700;
-    color: var(--success-color);
+    color: var(--warning-color);
 }
 
 .cpi-accordion-badge {
@@ -3058,6 +3058,10 @@ body {
 .cpi-accordion-badge.cpi-on-budget {
     background: #dcfce7;
     color: #166534;
+}
+.cpi-accordion-badge.cpi-within-tolerance {
+    background: #fef3c7;
+    color: #92400e;
 }
 
 .cpi-accordion-body {
