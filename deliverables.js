@@ -1086,6 +1086,7 @@ async function loadDeliverables() {
     renderDeliverablesSummaryTable();
     renderDeliverablesAccordion();
     renderGanttChart();
+    renderPaymentProjection();
     updateInProgressCount();
     updateDataSourceBadge();
     hideLoadingOverlay();
@@ -2378,22 +2379,6 @@ function formatDateShort(dateStr) {
 }
 
 // ===================================
-// CPI Accordion toggle
-// ===================================
-function toggleCpiAccordion() {
-    const body = document.getElementById('cpiAccordionBody');
-    const arrow = document.getElementById('cpiAccordionArrow');
-    if (!body || !arrow) return;
-    if (body.style.display === 'none') {
-        body.style.display = 'block';
-        arrow.innerHTML = '&#9660;';
-    } else {
-        body.style.display = 'none';
-        arrow.innerHTML = '&#9654;';
-    }
-}
-
-// ===================================
 // Informe de Corte (Report)
 // ===================================
 
@@ -2924,3 +2909,224 @@ window.hireMe = function() {
     );
     return '✨';
 };
+
+// ===================================
+// Proyección de pagos del contrato
+// ===================================
+const PAYMENT_SCHEDULE = [
+    { stageId: '1', pct: 10, amount: 109976242, dueDate: '2026-03-01' },
+    { stageId: '2', pct: 30, amount: 329928727, dueDate: '2026-04-28' },
+    { stageId: '3', pct: 35, amount: 384916848, dueDate: '2026-05-29' },
+    { stageId: '4', pct: 22, amount: 241947733, dueDate: '2026-06-29' },
+    { stageId: '5', pct:  3, amount:  32992873, dueDate: '2026-07-10' }
+];
+const PAYMENT_TOTAL = 1099762423;
+
+function getStageBillingStatus(stageId) {
+    if (!deliverablesData) return { status: 'pendiente', approved: 0, total: 0 };
+    const stage = deliverablesData.stages.find(s => String(s.id) === stageId);
+    if (!stage) return { status: 'pendiente', approved: 0, total: 0 };
+    let total = 0, approved = 0;
+    for (const product of stage.products) {
+        for (const del of product.deliverables) {
+            if (del.id === 'FAC') continue;
+            total++;
+            if (del.status === 'aprobado') approved++;
+        }
+    }
+    let status;
+    if (total === 0) status = 'pendiente';
+    else if (approved === 0) status = 'pendiente';
+    else if (approved < total) status = 'en_curso';
+    else status = 'facturado';
+    return { status, approved, total };
+}
+
+function fmtCOP(v) {
+    return '$' + new Intl.NumberFormat('es-CO').format(Math.round(v));
+}
+
+function fmtPaymentDate(s) {
+    const d = new Date(s + 'T00:00:00');
+    if (isNaN(d.getTime())) return s;
+    return d.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function renderPaymentProjection() {
+    const tbody = document.getElementById('paymentScheduleBody');
+    if (!tbody) return;
+
+    const today = new Date().toISOString().slice(0, 10);
+    let billedAmount = 0;
+    let nextPayment = null;
+
+    tbody.innerHTML = '';
+
+    PAYMENT_SCHEDULE.forEach(item => {
+        const stage = deliverablesData
+            ? deliverablesData.stages.find(s => String(s.id) === item.stageId)
+            : null;
+        const stageName = stage ? stage.name : `Etapa ${item.stageId}`;
+        const info = getStageBillingStatus(item.stageId);
+        const overdue = info.status !== 'facturado' && today > item.dueDate;
+
+        let badgeClass, badgeLabel;
+        if (info.status === 'facturado') {
+            badgeClass = 'payment-badge-billed';
+            badgeLabel = 'Facturado';
+            billedAmount += item.amount;
+        } else if (overdue) {
+            badgeClass = 'payment-badge-overdue';
+            const daysLate = Math.floor((new Date(today) - new Date(item.dueDate)) / 86400000);
+            badgeLabel = `Atrasada · ${daysLate}d`;
+        } else if (info.status === 'en_curso') {
+            badgeClass = 'payment-badge-progress';
+            badgeLabel = `En curso · ${info.approved}/${info.total}`;
+        } else {
+            badgeClass = 'payment-badge-pending';
+            badgeLabel = 'Pendiente';
+        }
+
+        if (info.status !== 'facturado' && !nextPayment) nextPayment = { item, stageName };
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><strong>Etapa ${item.stageId}.</strong> ${stageName}</td>
+            <td class="text-center">${item.pct}%</td>
+            <td class="text-right">${fmtCOP(item.amount)}</td>
+            <td class="text-center">${fmtPaymentDate(item.dueDate)}</td>
+            <td class="text-center"><span class="payment-badge ${badgeClass}">${badgeLabel}</span></td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    // KPIs
+    const pendingAmount = PAYMENT_TOTAL - billedAmount;
+    const billedPct = (billedAmount / PAYMENT_TOTAL) * 100;
+    const pendingPct = 100 - billedPct;
+
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    const setBar = (id, pct) => { const el = document.getElementById(id); if (el) el.style.width = pct.toFixed(2) + '%'; };
+
+    set('paymentBilled', fmtCOP(billedAmount));
+    set('paymentBilledPct', billedPct.toFixed(1) + '%');
+    setBar('paymentBilledBar', billedPct);
+
+    set('paymentPending', fmtCOP(pendingAmount));
+    set('paymentPendingPct', pendingPct.toFixed(1) + '%');
+    setBar('paymentPendingBar', pendingPct);
+
+    if (nextPayment) {
+        set('paymentNextAmount', fmtCOP(nextPayment.item.amount));
+        set('paymentNextStage', `Etapa ${nextPayment.item.stageId}. ${nextPayment.stageName}`);
+        const days = Math.ceil((new Date(nextPayment.item.dueDate) - new Date(today)) / 86400000);
+        const dateStr = fmtPaymentDate(nextPayment.item.dueDate);
+        set('paymentNextDate', days >= 0 ? `${dateStr} · en ${days} días` : `${dateStr} · vencida`);
+    } else {
+        set('paymentNextAmount', '—');
+        set('paymentNextStage', 'Proyecto facturado en su totalidad');
+        set('paymentNextDate', '');
+    }
+
+    renderPaymentCurveChart();
+}
+
+function renderPaymentCurveChart() {
+    const canvas = document.getElementById('paymentCurveChart');
+    if (!canvas || !window.Chart) return;
+
+    if (window._paymentCurveChart) {
+        try { window._paymentCurveChart.destroy(); } catch (e) { /* ignore */ }
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    const sorted = [...PAYMENT_SCHEDULE].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+    const firstDate = new Date(sorted[0].dueDate + 'T00:00:00');
+    const lastDate  = new Date(sorted[sorted.length - 1].dueDate + 'T00:00:00');
+
+    // Eje X: desde 1 mes antes del primer pago hasta 1 mes después del último
+    const cursor = new Date(firstDate.getFullYear(), firstDate.getMonth() - 1, 1);
+    const endCursor = new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 1);
+
+    const labels = [];
+    const projectedData = [];
+    const executedData = [];
+
+    while (cursor <= endCursor) {
+        const last = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0);
+        const lastStr = last.toISOString().slice(0, 10);
+
+        labels.push(cursor.toLocaleDateString('es-CO', { month: 'short', year: '2-digit' }));
+
+        let projCum = 0;
+        let execCum = 0;
+        for (const p of PAYMENT_SCHEDULE) {
+            if (p.dueDate <= lastStr) projCum += p.amount;
+            const info = getStageBillingStatus(p.stageId);
+            if (info.status === 'facturado' && p.dueDate <= lastStr && p.dueDate <= today) {
+                execCum += p.amount;
+            }
+        }
+        projectedData.push(projCum);
+        executedData.push(execCum);
+        cursor.setMonth(cursor.getMonth() + 1);
+    }
+
+    window._paymentCurveChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Proyectado',
+                    data: projectedData,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                    borderWidth: 2,
+                    fill: true,
+                    stepped: 'before',
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                },
+                {
+                    label: 'Facturado',
+                    data: executedData,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.18)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    stepped: 'before',
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `${ctx.dataset.label}: ${fmtCOP(ctx.parsed.y)}`
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(0,0,0,0.05)' },
+                    ticks: {
+                        callback: (v) => '$' + (v / 1e6).toFixed(0) + 'M',
+                        font: { size: 11 }
+                    }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 11 } }
+                }
+            }
+        }
+    });
+}

@@ -78,37 +78,70 @@
                 <div class="kpi-bar-subtitle">Avance ponderado por impacto contractual</div>
             </section>
 
-            <!-- CPI Accordion (collapsed by default) -->
-            <section class="cpi-accordion" id="cpiAccordion">
-                <div class="cpi-accordion-header" onclick="toggleCpiAccordion()">
-                    <div class="cpi-accordion-left">
-                        <span class="cpi-accordion-arrow" id="cpiAccordionArrow">&#9654;</span>
-                        <span class="cpi-accordion-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        </span>
-                        <span class="cpi-accordion-title">CPI · Cost Performance Index</span>
+            <!-- Proyección de pagos del contrato -->
+            <section class="payment-projection-section" id="paymentProjection">
+                <div class="section-header">
+                    <h2>Proyección de pagos del contrato</h2>
+                    <p class="section-subtitle">Hitos de facturación por etapa contractual. Los pagos se efectúan contra entregables aprobados por la supervisión, sin anticipo (CEC 41.2 del contrato).</p>
+                </div>
+
+                <div class="payment-kpi-grid">
+                    <div class="payment-kpi-card payment-kpi-billed">
+                        <div class="payment-kpi-label">Facturado a la fecha</div>
+                        <div class="payment-kpi-value" id="paymentBilled">$0</div>
+                        <div class="payment-kpi-meta"><span id="paymentBilledPct">0%</span> del contrato</div>
+                        <div class="payment-kpi-bar"><div class="payment-kpi-fill payment-kpi-fill-billed" id="paymentBilledBar" style="width:0%"></div></div>
                     </div>
-                    <div class="cpi-accordion-right">
-                        <span class="cpi-accordion-value">0.98</span>
-                        <span class="cpi-accordion-badge cpi-within-tolerance">Dentro de tolerancia</span>
+                    <div class="payment-kpi-card payment-kpi-pending">
+                        <div class="payment-kpi-label">Saldo por facturar</div>
+                        <div class="payment-kpi-value" id="paymentPending">$0</div>
+                        <div class="payment-kpi-meta"><span id="paymentPendingPct">0%</span> del contrato</div>
+                        <div class="payment-kpi-bar"><div class="payment-kpi-fill payment-kpi-fill-pending" id="paymentPendingBar" style="width:0%"></div></div>
+                    </div>
+                    <div class="payment-kpi-card payment-kpi-next">
+                        <div class="payment-kpi-label">Próxima factura</div>
+                        <div class="payment-kpi-value" id="paymentNextAmount">—</div>
+                        <div class="payment-kpi-meta" id="paymentNextStage">—</div>
+                        <div class="payment-kpi-next-date" id="paymentNextDate">—</div>
                     </div>
                 </div>
-                <div class="cpi-accordion-body" id="cpiAccordionBody" style="display:none">
-                    <div class="cpi-metric-grid">
-                        <div class="cpi-metric">
-                            <div class="cpi-metric-label">Índice de desempeño de costos</div>
-                            <div class="cpi-metric-value cpi-slight-up">0.98</div>
-                            <div class="cpi-metric-note">CPI = Valor ganado / Costo real</div>
-                        </div>
-                        <div class="cpi-metric">
-                            <div class="cpi-metric-label">Variación de inversión</div>
-                            <div class="cpi-metric-value cpi-slight-up">+2.1%</div>
-                            <div class="cpi-metric-note">Sobre ejecución marginal frente a la línea base</div>
+
+                <div class="payment-table-container">
+                    <table class="payment-table">
+                        <thead>
+                            <tr>
+                                <th>Etapa</th>
+                                <th class="text-center">% Contrato</th>
+                                <th class="text-right">Valor</th>
+                                <th class="text-center">Fecha de facturación</th>
+                                <th class="text-center">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentScheduleBody">
+                            <!-- Filas calculadas dinámicamente -->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Total contrato</th>
+                                <th class="text-center">100%</th>
+                                <th class="text-right">$1.099.762.423</th>
+                                <th colspan="2"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="payment-chart-card">
+                    <div class="payment-chart-header">
+                        <h3>Curva de pagos acumulados</h3>
+                        <div class="payment-chart-legend">
+                            <span class="payment-legend-item"><span class="payment-legend-dot legend-projected"></span>Proyectado</span>
+                            <span class="payment-legend-item"><span class="payment-legend-dot legend-executed"></span>Facturado</span>
                         </div>
                     </div>
-                    <p class="cpi-description">
-                        El indicador CPI se sitúa en <strong>0.98</strong>, reflejando una <strong>sobre ejecución marginal del presupuesto</strong> que permanece dentro del rango de tolerancia técnicamente aceptable (CPI ≥ 0.95) según las buenas prácticas de gestión del valor ganado. Esta desviación se explica por una decisión estratégica deliberada: adelantar el inicio de la Etapa 3 en paralelo con el cierre de la Etapa 2, lo que requirió un despliegue adicional de personal para sostener el ritmo de entrega sin comprometer las fechas comprometidas ni la calidad de los productos. Lejos de constituir una desviación negativa, este esfuerzo complementario evidencia el <strong>compromiso operativo</strong> del equipo ejecutor con la oportuna culminación del alcance y refuerza la trazabilidad del esquema de aseguramiento de tiempos del proyecto.
-                    </p>
+                    <div class="payment-chart-content">
+                        <canvas id="paymentCurveChart"></canvas>
+                    </div>
                 </div>
             </section>
 
