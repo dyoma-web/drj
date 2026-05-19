@@ -152,11 +152,19 @@ const DASHBOARD_CONFIG = {
         showNotification: true    // Mostrar notificación al actualizar
     },
 
-    // Sincronización con Google Sheets
+    // Backend de Supabase (activo)
+    supabase: {
+        url: 'https://zgvyvilcdegnothphuhu.supabase.co',
+        publishableKey: 'sb_publishable_2WiOs48ybni93JsvM2GrJg_xkxNO3MA',
+        // Token de edición. Dejar '' para que el dashboard lo lea de localStorage
+        // (más seguro: no queda en el repo). En consola del browser:
+        //   localStorage.setItem('drj_edit_token', 'drj_edit_2026_Re9Qnc1y9odGvKBf')
+        editToken: ''
+    },
+
+    // Sincronización con Google Sheets (legacy, queda como fallback)
     googleSheets: {
-        // URL del Google Apps Script desplegado como web app
-        // Dejar vacío ('') para desactivar la sincronización
-        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbwsVPUN9NdKlvmoUmuF4HV8VVnUNsHpXtR1p7Lep_mQeoW6HLsMCQgrPkkaMGYM9foYtg/exec'
+        appsScriptUrl: ''  // vaciado para forzar uso de Supabase
     },
 
     // Modo Debug

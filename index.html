@@ -78,6 +78,12 @@
                 <div class="kpi-bar-subtitle">Avance ponderado por impacto contractual</div>
             </section>
 
+            <!-- Delta vs cronograma planeado (sutil, informativo) -->
+            <div class="baseline-delta" id="baselineDelta" style="display:none">
+                <span class="baseline-delta-dot" id="baselineDeltaDot"></span>
+                <span class="baseline-delta-text" id="baselineDeltaText"></span>
+            </div>
+
             <!-- Proyección de pagos del contrato -->
             <section class="payment-projection-section" id="paymentProjection">
                 <div class="section-header">
@@ -518,12 +524,14 @@
     <!-- Chart.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Configuration -->
-    <script src="config.js"></script>
-    <!-- Google Sheets API Client -->
-    <script src="sheets-api.js"></script>
+    <script src="config.js?v=20260518b"></script>
+    <!-- Google Sheets API Client (legacy fallback) -->
+    <script src="sheets-api.js?v=20260518b"></script>
+    <!-- Supabase API Client (active backend; aliasa como SheetsAPI si está configurado) -->
+    <script src="supabase-api.js?v=20260518b"></script>
     <!-- Main JavaScript -->
-    <script src="app.js"></script>
+    <script src="app.js?v=20260518b"></script>
     <!-- Deliverables Management -->
-    <script src="deliverables.js"></script>
+    <script src="deliverables.js?v=20260518b"></script>
 </body>
 </html>

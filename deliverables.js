@@ -28,10 +28,22 @@ function toggleEditLock() {
         const pwd = prompt('Ingrese la clave de edición:');
         if (pwd === EDIT_PASSWORD) {
             window._dashboardEditUnlocked = true;
+            ensureSupabaseEditToken();
             updateEditLockUI();
         } else if (pwd !== null) {
             alert('Clave incorrecta');
         }
+    }
+}
+
+// Asegura que el token de escritura de Supabase esté en localStorage.
+// Si no, lo pide una sola vez. Necesario para que las RLS policies permitan UPDATE/INSERT.
+function ensureSupabaseEditToken() {
+    if (!window.SupabaseAPI || !SupabaseAPI.isConfigured()) return;
+    if (SupabaseAPI.hasEditToken()) return;
+    const token = prompt('Ingrese el token de edición de Supabase\n(se guardará en este navegador para futuras sesiones):');
+    if (token) {
+        try { localStorage.setItem('drj_edit_token', token.trim()); } catch (e) {}
     }
 }
 
@@ -1569,6 +1581,9 @@ function renderDeliverablesSummaryTable() {
     const impactBar = document.getElementById('impactProgressBar');
     if (impactBar) impactBar.style.width = Math.min(100, overallImpact).toFixed(2) + '%';
 
+    // Delta vs cronograma planeado (PV) — informativo, debajo del kpi-bar
+    renderBaselineDelta(overallImpact);
+
     // Valor monetario ganado
     const impactValueEl = document.getElementById('impactValue');
     if (impactValueEl) {
@@ -2911,6 +2926,84 @@ window.hireMe = function() {
 };
 
 // ===================================
+// Avance planeado (Planned Value) y delta vs línea base
+// ===================================
+function plannedProgressForDeliverable(del, atDateStr) {
+    // % planeado de un entregable a la fecha dada, según fechas comprometidas.
+    // Lineal entre fecha_inicio y fecha_entrega.
+    const fe = cleanDateStr(del.dueDate);
+    if (!fe) return 0;
+    if (atDateStr >= fe) return 100;
+    const fi = cleanDateStr(del.startDate) || fe;
+    if (atDateStr < fi) return 0;
+    const at = new Date(atDateStr + 'T00:00:00');
+    const di = new Date(fi + 'T00:00:00');
+    const df = new Date(fe + 'T00:00:00');
+    const span = (df - di) / 86400000;
+    if (span <= 0) return atDateStr >= fe ? 100 : 0;
+    const elapsed = (at - di) / 86400000;
+    return Math.max(0, Math.min(100, (elapsed / span) * 100));
+}
+
+function calculateOverallPlanned(atDateStr) {
+    // Replica la misma ponderación que el KPI de impacto: por etapa
+    // (actividades-weighted) y luego por peso contractual.
+    if (!deliverablesData) return 0;
+    let overall = 0;
+    for (const stage of deliverablesData.stages) {
+        let wsum = 0, asum = 0;
+        for (const product of stage.products) {
+            for (const del of product.deliverables) {
+                const act = getActividades(del);
+                const p = plannedProgressForDeliverable(del, atDateStr);
+                wsum += act * p;
+                asum += act;
+            }
+        }
+        const stageAvg = asum > 0 ? wsum / asum : 0;
+        const weight = STAGE_WEIGHTS[stage.id] || 0;
+        overall += (stageAvg * weight) / 100;
+    }
+    return overall;
+}
+
+function renderBaselineDelta(overallImpact) {
+    const container = document.getElementById('baselineDelta');
+    const dot = document.getElementById('baselineDeltaDot');
+    const text = document.getElementById('baselineDeltaText');
+    if (!container || !dot || !text || !deliverablesData) return;
+
+    const today = new Date().toISOString().slice(0, 10);
+    const planned = calculateOverallPlanned(today);
+    const delta = overallImpact - planned;
+
+    // Solo mostrar si tiene sentido (planned > 0)
+    if (planned <= 0) { container.style.display = 'none'; return; }
+
+    let dotClass, message;
+    const absDelta = Math.abs(delta);
+    if (delta >= 0) {
+        dotClass = 'delta-on-track';
+        message = `Ligeramente por encima de lo planeado, dentro de los parámetros de ejecución establecidos.`;
+    } else if (absDelta <= 5) {
+        dotClass = 'delta-tolerance';
+        message = `Ligera desviación frente a lo planeado, dentro de los parámetros de ejecución establecidos.`;
+    } else if (absDelta <= 10) {
+        dotClass = 'delta-tolerance';
+        message = `Desviación moderada frente al cronograma planeado.`;
+    } else {
+        dotClass = 'delta-behind';
+        message = `Desviación significativa frente al cronograma planeado.`;
+    }
+
+    dot.className = 'baseline-delta-dot ' + dotClass;
+    container.className = 'baseline-delta ' + dotClass;
+    const sign = delta >= 0 ? '+' : '−';
+    text.innerHTML = `<strong>Variación (Δ) vs cronograma planeado:</strong> <span class="baseline-delta-value">${sign}${absDelta.toFixed(2)} pts</span> · ${message}`;
+    container.style.display = 'flex';
+}
+
+// ===================================
 // Proyección de pagos del contrato
 // ===================================
 const PAYMENT_SCHEDULE = [
@@ -3044,9 +3137,9 @@ function renderPaymentCurveChart() {
     const firstDate = new Date(sorted[0].dueDate + 'T00:00:00');
     const lastDate  = new Date(sorted[sorted.length - 1].dueDate + 'T00:00:00');
 
-    // Eje X: desde 1 mes antes del primer pago hasta 1 mes después del último
+    // Eje X: desde 1 mes antes del primer pago hasta el mes del último pago (cierre del proyecto)
     const cursor = new Date(firstDate.getFullYear(), firstDate.getMonth() - 1, 1);
-    const endCursor = new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 1);
+    const endCursor = new Date(lastDate.getFullYear(), lastDate.getMonth(), 1);
 
     const labels = [];
     const projectedData = [];
