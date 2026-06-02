@@ -1044,6 +1044,7 @@ body {
     border-radius: var(--border-radius-sm);
     transition: background var(--transition-fast);
     border-bottom: 1px solid var(--gray-50);
+    position: relative;
 }
 
 .deliverable-row:hover {
@@ -2981,14 +2982,18 @@ body {
 }
 
 /* ===================================
-   Botón "Detalles" inline en row de entregable (matriz de producción)
+   Botón "Detalles" — posicionado absoluto sobre el row del entregable
+   (a la izquierda del alert dot, para no sufrir clip de la columna 30px)
    =================================== */
 .btn-detalles {
+    position: absolute;
+    right: 42px;
+    top: 50%;
+    transform: translateY(-50%);
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    margin-right: 8px;
-    padding: 3px 9px;
+    gap: 5px;
+    padding: 4px 10px;
     background: var(--gray-50);
     border: 1px solid var(--gray-200);
     border-radius: var(--border-radius-sm);
@@ -2996,14 +3001,17 @@ body {
     font-size: 10.5px;
     font-weight: 600;
     font-family: inherit;
+    line-height: 1;
     cursor: pointer;
     transition: all var(--transition-fast);
-    vertical-align: middle;
+    white-space: nowrap;
+    z-index: 2;
 }
 .btn-detalles:hover {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+    transform: translateY(-50%) scale(1.03);
 }
 .btn-detalles svg { flex-shrink: 0; }
 
