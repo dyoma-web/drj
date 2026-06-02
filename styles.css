@@ -1023,7 +1023,7 @@ body {
 /* Deliverables List */
 .deliverables-list-header {
     display: grid;
-    grid-template-columns: 55px 1fr 110px 100px 90px 80px 80px 26px 30px;
+    grid-template-columns: 55px 1fr 110px 100px 90px 80px 80px 26px 90px 30px;
     gap: 8px;
     padding: 6px 10px;
     font-size: 11px;
@@ -1036,7 +1036,7 @@ body {
 
 .deliverable-row {
     display: grid;
-    grid-template-columns: 55px 1fr 110px 100px 90px 80px 80px 26px 30px;
+    grid-template-columns: 55px 1fr 110px 100px 90px 80px 80px 26px 90px 30px;
     gap: 8px;
     padding: 10px;
     align-items: center;
@@ -1044,7 +1044,12 @@ body {
     border-radius: var(--border-radius-sm);
     transition: background var(--transition-fast);
     border-bottom: 1px solid var(--gray-50);
-    position: relative;
+}
+
+.del-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .deliverable-row:hover {
@@ -2982,14 +2987,9 @@ body {
 }
 
 /* ===================================
-   Botón "Detalles" — posicionado absoluto sobre el row del entregable
-   (a la izquierda del alert dot, para no sufrir clip de la columna 30px)
+   Botón "Detalles" — vive en su propia columna del grid (del-actions)
    =================================== */
 .btn-detalles {
-    position: absolute;
-    right: 42px;
-    top: 50%;
-    transform: translateY(-50%);
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -3005,13 +3005,12 @@ body {
     cursor: pointer;
     transition: all var(--transition-fast);
     white-space: nowrap;
-    z-index: 2;
 }
 .btn-detalles:hover {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
-    transform: translateY(-50%) scale(1.03);
+    transform: scale(1.03);
 }
 .btn-detalles svg { flex-shrink: 0; }
 

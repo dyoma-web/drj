@@ -1495,6 +1495,7 @@ function renderStageProducts(stage) {
             <span class="dlh-date">F. Fase</span>
             <span class="dlh-date-final">F. Final</span>
             <span class="dlh-notes"></span>
+            <span class="dlh-actions"></span>
             <span class="dlh-alert"></span>
         </div>`;
 
@@ -1522,8 +1523,8 @@ function renderStageProducts(stage) {
                     <span class="del-date">${formatDateShort(sched.endDate)}</span>
                     <span class="del-date-final">${formatDateShort(schedFull.endDate)}</span>
                     <span class="del-notes">${del.observations ? '<svg class="icon-notes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="13" y2="13"></line></svg>' : ''}</span>
+                    <span class="del-actions">${del.id === '3.2.1' ? '<button class="btn-detalles" onclick="event.stopPropagation();openMatrizModal()" title="Ver matriz de producción de recursos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Detalles</button>' : ''}</span>
                     <span class="del-alert"><span class="alert-dot ${alertClass}"></span></span>
-                    ${del.id === '3.2.1' ? '<button class="btn-detalles" onclick="event.stopPropagation();openMatrizModal()" title="Ver matriz de producción de recursos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Detalles</button>' : ''}
                 </div>
             `;
         }
