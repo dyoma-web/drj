@@ -2981,6 +2981,124 @@ body {
 }
 
 /* ===================================
+   Botón "Detalles" inline en row de entregable (matriz de producción)
+   =================================== */
+.btn-detalles {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 8px;
+    padding: 3px 9px;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius-sm);
+    color: var(--primary-color);
+    font-size: 10.5px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    vertical-align: middle;
+}
+.btn-detalles:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+.btn-detalles svg { flex-shrink: 0; }
+
+/* ===================================
+   Matriz de Producción (modal iframe fullscreen)
+   =================================== */
+.matriz-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 9500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: matrizFadeIn 180ms ease;
+}
+.matriz-modal-overlay.active { display: flex; }
+@keyframes matrizFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.matriz-modal {
+    background: #eef1f6;
+    width: 100%;
+    max-width: 1440px;
+    height: 100%;
+    max-height: calc(100vh - 48px);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.matriz-modal-header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+}
+.matriz-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+.matriz-modal-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary-color);
+    background: rgba(30, 64, 175, 0.08);
+    padding: 3px 8px;
+    border-radius: var(--border-radius-sm);
+}
+.matriz-modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--gray-200);
+    background: white;
+    color: var(--gray-600);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+.matriz-modal-close:hover {
+    background: var(--gray-100);
+    color: var(--gray-800);
+}
+
+.matriz-modal-body {
+    flex: 1;
+    min-height: 0;
+    background: #eef1f6;
+}
+.matriz-modal-body iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .matriz-modal-overlay { padding: 0; }
+    .matriz-modal { max-height: 100vh; border-radius: 0; }
+}
+
+/* ===================================
    Baseline Delta (sutil, informativo bajo KPI bar)
    =================================== */
 .baseline-delta {

@@ -15,7 +15,7 @@
                         {
                             "id": "1.1.1",
                             "name": "Documento digital del Plan general del proyecto de consultoría",
-                            "description": "Plan maestro con objetivos, metodología, alcance\/EDT, cronograma, gobierno, roles (RACI), riesgos, comunicaciones, calidad, criterios de aceptación y recursos.",
+                            "description": "Plan maestro con objetivos, metodología, alcance/EDT, cronograma, gobierno, roles (RACI), riesgos, comunicaciones, calidad, criterios de aceptación y recursos.",
                             "status": "aprobado",
                             "responsible": "Innovahub",
                             "dueDate": "2025-11-18",
@@ -87,7 +87,7 @@
                         {
                             "id": "1.2.1",
                             "name": "Documento digital de análisis de contexto y diagnóstico",
-                            "description": "Caracterización y diagnóstico de necesidades de formación\/capacitación en la Rama Judicial con enfoque diferencial, interseccional y de género.",
+                            "description": "Caracterización y diagnóstico de necesidades de formación/capacitación en la Rama Judicial con enfoque diferencial, interseccional y de género.",
                             "status": "aprobado",
                             "responsible": "Innovahub",
                             "dueDate": "2025-11-25",
@@ -149,7 +149,7 @@
                         {
                             "id": "1.3.1",
                             "name": "Documento digital de resultados de revisión",
-                            "description": "Resultados de la revisión de insumos\/activos, con análisis y conclusiones.",
+                            "description": "Resultados de la revisión de insumos/activos, con análisis y conclusiones.",
                             "status": "aprobado",
                             "responsible": "Innovahub",
                             "dueDate": "2025-11-25",
@@ -177,7 +177,7 @@
                         {
                             "id": "1.3.2",
                             "name": "Matriz digital de información sistematizada",
-                            "description": "Consolidado estructurado (inventario\/criterios\/estado).",
+                            "description": "Consolidado estructurado (inventario/criterios/estado).",
                             "status": "aprobado",
                             "responsible": "Innovahub",
                             "dueDate": "2025-11-25",
@@ -274,7 +274,7 @@
                             "dueDate": "2026-01-30",
                             "lastStatusChange": "2026-02-26",
                             "observations": "",
-                            "repositoryUrl": "",
+                            "repositoryUrl": "https://drive.google.com/file/d/1Hcc00J33zmgwPHrGMU-YDYucTc-htC3c/view",
                             "history": [
                                 {
                                     "date": "2026-02-26",
@@ -286,7 +286,7 @@
                         {
                             "id": "2.1.2",
                             "name": "Esquema gráfico del ciclo y rutas",
-                            "description": "Representación visual (mapa\/diagrama) de la estructura del ciclo.",
+                            "description": "Representación visual (mapa/diagrama) de la estructura del ciclo.",
                             "status": "en_revision",
                             "responsible": "EJRLB",
                             "dueDate": "2026-01-30",
@@ -303,7 +303,7 @@
                         },
                         {
                             "id": "2.1.3",
-                            "name": "Informe del taller de presentación\/validación",
+                            "name": "Informe del taller de presentación/validación",
                             "description": "Resultados del taller, acuerdos y conclusiones.",
                             "status": "en_elaboracion",
                             "responsible": "Innovahub",
@@ -321,14 +321,14 @@
                         },
                         {
                             "id": "2.1.4",
-                            "name": "Infografía Sentencia T-016\/2022 e informe de incorporación",
+                            "name": "Infografía Sentencia T-016/2022 e informe de incorporación",
                             "description": "Pieza gráfica y explicación de cómo se integra al ciclo.",
                             "status": "en_revision",
                             "responsible": "EJRLB",
                             "dueDate": "2026-01-30",
                             "lastStatusChange": "2026-02-28",
                             "observations": "",
-                            "repositoryUrl": "",
+                            "repositoryUrl": "https://drive.google.com/file/d/1-s8oNFDOzbSltRHdxkn9sBLQU5A7Y_XV/view",
                             "history": [
                                 {
                                     "date": "2026-02-28",
@@ -410,7 +410,7 @@
                         {
                             "id": "2.2.3",
                             "name": "Documento con 14 informes de talleres de validación",
-                            "description": "Evidencias\/resultados de validación por la Red de Formadores.",
+                            "description": "Evidencias/resultados de validación por la Red de Formadores.",
                             "status": "en_elaboracion",
                             "responsible": "Innovahub",
                             "dueDate": "2026-03-13",
@@ -434,7 +434,7 @@
                             "dueDate": "2026-03-27",
                             "lastStatusChange": "2026-02-28",
                             "observations": "",
-                            "repositoryUrl": "",
+                            "repositoryUrl": "https://drive.google.com/file/d/1mkVpepMSP1iBjDorWt0ZvopGwCtLYdsI/view",
                             "history": [
                                 {
                                     "date": "2026-02-28",
@@ -452,7 +452,7 @@
                         {
                             "id": "2.3.1",
                             "name": "Documento digital del diseño de metodología innovadora",
-                            "description": "Definición metodológica (estrategia didáctica\/innovación).",
+                            "description": "Definición metodológica (estrategia didáctica/innovación).",
                             "status": "en_revision",
                             "responsible": "EJRLB",
                             "dueDate": "2026-02-06",
@@ -512,7 +512,7 @@
                         {
                             "id": "2.4.1",
                             "name": "Documento técnico de lineamientos",
-                            "description": "Lineamientos para monitoreo\/seguimiento del ciclo.",
+                            "description": "Lineamientos para monitoreo/seguimiento del ciclo.",
                             "status": "en_elaboracion",
                             "responsible": "Innovahub",
                             "dueDate": "2026-03-13",
@@ -530,7 +530,7 @@
                         {
                             "id": "2.4.2",
                             "name": "Instrumentos de recolección de información",
-                            "description": "Formatos\/herramientas para capturar datos (encuestas, listas, etc.).",
+                            "description": "Formatos/herramientas para capturar datos (encuestas, listas, etc.).",
                             "status": "en_elaboracion",
                             "responsible": "Innovahub",
                             "dueDate": "2026-03-20",
@@ -548,7 +548,7 @@
                         {
                             "id": "2.4.3",
                             "name": "Matriz de indicadores de gestión y resultado",
-                            "description": "KPIs\/indicadores con definición y forma de medición.",
+                            "description": "KPIs/indicadores con definición y forma de medición.",
                             "status": "en_elaboracion",
                             "responsible": "Innovahub",
                             "dueDate": "2026-03-20",
@@ -602,7 +602,7 @@
                         {
                             "id": "2.4.6",
                             "name": "Informe de validación de mecanismos propuestos",
-                            "description": "Validación\/retroalimentación y ajustes.",
+                            "description": "Validación/retroalimentación y ajustes.",
                             "status": "en_elaboracion",
                             "responsible": "Innovahub",
                             "dueDate": "2026-03-20",
@@ -661,14 +661,14 @@
                         },
                         {
                             "id": "2.5.2",
-                            "name": "Informe de pruebas de funcionalidad\/navegación\/interacción",
+                            "name": "Informe de pruebas de funcionalidad/navegación/interacción",
                             "description": "Resultados de pruebas y hallazgos.",
                             "status": "en_elaboracion",
                             "responsible": "Innovahub",
                             "dueDate": "2026-03-27",
                             "lastStatusChange": "2026-02-28",
                             "observations": "",
-                            "repositoryUrl": "",
+                            "repositoryUrl": "https://drive.google.com/file/d/17VA4r4RhK72v-FzrrgsghiHpwBWJFpdk/view",
                             "history": [
                                 {
                                     "date": "2026-02-28",
@@ -680,7 +680,7 @@
                         {
                             "id": "2.5.3",
                             "name": "Plan de ajustes y mejora del entorno",
-                            "description": "Backlog\/plan de optimización.",
+                            "description": "Backlog/plan de optimización.",
                             "status": "no_iniciado",
                             "responsible": "Innovahub",
                             "dueDate": "2026-03-27",
@@ -692,7 +692,7 @@
                         {
                             "id": "2.5.4",
                             "name": "Guía técnica de implementación y mantenimiento",
-                            "description": "Cómo instalar\/operar\/mantener el entorno.",
+                            "description": "Cómo instalar/operar/mantener el entorno.",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "2026-03-27",
@@ -710,7 +710,7 @@
                             "dueDate": "2026-03-27",
                             "lastStatusChange": "",
                             "observations": "Requerimos un espacio para determinar cuáles son los productos específicos y sus características",
-                            "repositoryUrl": "",
+                            "repositoryUrl": "https://drive.google.com/file/d/1KAz8qar4G6SppF0ttGV7BZTUI3Y41axf/view",
                             "history": []
                         },
                         {
@@ -740,7 +740,7 @@
                         {
                             "id": "2.6.1",
                             "name": "Documento de diseño funcional y gráfico",
-                            "description": "Arquitectura, diseño UI\/UX y lineamientos del micrositio.",
+                            "description": "Arquitectura, diseño UI/UX y lineamientos del micrositio.",
                             "status": "en_elaboracion",
                             "responsible": "Innovahub",
                             "dueDate": "2026-03-27",
@@ -758,7 +758,7 @@
                         {
                             "id": "2.6.2",
                             "name": "Informe de pruebas y plan de ajustes",
-                            "description": "Resultados de pruebas (funcionalidad\/accesibilidad) y acciones correctivas.",
+                            "description": "Resultados de pruebas (funcionalidad/accesibilidad) y acciones correctivas.",
                             "status": "no_iniciado",
                             "responsible": "Innovahub",
                             "dueDate": "2026-03-27",
@@ -829,7 +829,7 @@
                         },
                         {
                             "id": "3.1.2",
-                            "name": "14 informes de revisión\/concepto del experto temático",
+                            "name": "14 informes de revisión/concepto del experto temático",
                             "description": "Visto bueno y observaciones por guion.",
                             "status": "no_iniciado",
                             "responsible": "",
@@ -842,7 +842,7 @@
                         {
                             "id": "3.1.3",
                             "name": "Informe de ajustes a los 14 guiones",
-                            "description": "Registro de cambios según observaciones (expertos\/Escuela).",
+                            "description": "Registro de cambios según observaciones (expertos/Escuela).",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -865,7 +865,7 @@
                         },
                         {
                             "id": "3.1.5",
-                            "name": "Manual de usuario (Admins\/Formadores\/Discentes)",
+                            "name": "Manual de usuario (Admins/Formadores/Discentes)",
                             "description": "Instructivo operativo por rol.",
                             "status": "no_iniciado",
                             "responsible": "",
@@ -890,7 +890,7 @@
                         {
                             "id": "3.1.7",
                             "name": "Informe digital consolidado del trabajo",
-                            "description": "Reporte integral del componente (incluye recomendaciones\/LP\/MP).",
+                            "description": "Reporte integral del componente (incluye recomendaciones/LP/MP).",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -920,7 +920,7 @@
                         {
                             "id": "3.2.2",
                             "name": "Documento con actividades interactivas y lúdicas",
-                            "description": "Catálogo\/detalle de actividades.",
+                            "description": "Catálogo/detalle de actividades.",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -944,7 +944,7 @@
                         {
                             "id": "3.2.4",
                             "name": "Materiales descargables complementarios",
-                            "description": "Anexos\/recursos descargables.",
+                            "description": "Anexos/recursos descargables.",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -1040,7 +1040,7 @@
                         {
                             "id": "3.4.2",
                             "name": "Instrumentos de recolección de información",
-                            "description": "Instrumentos integrados\/ajustados para captura de datos.",
+                            "description": "Instrumentos integrados/ajustados para captura de datos.",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -1052,7 +1052,7 @@
                         {
                             "id": "3.4.3",
                             "name": "Repositorio del código fuente",
-                            "description": "Entrega técnica para mantenimiento\/evolución (comentado, librerías y dependencias).",
+                            "description": "Entrega técnica para mantenimiento/evolución (comentado, librerías y dependencias).",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -1088,7 +1088,7 @@
                         {
                             "id": "3.4.6",
                             "name": "Especificaciones técnicas de integración",
-                            "description": "Requisitos\/arquitectura de integración con sistema de seguimiento académico.",
+                            "description": "Requisitos/arquitectura de integración con sistema de seguimiento académico.",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -1135,7 +1135,7 @@
                         },
                         {
                             "id": "4.1.2",
-                            "name": "Informe de ejecución\/resultados de pruebas funcionales",
+                            "name": "Informe de ejecución/resultados de pruebas funcionales",
                             "description": "Hallazgos, evidencias y resultados (consultor).",
                             "status": "no_iniciado",
                             "responsible": "",
@@ -1214,7 +1214,7 @@
                         {
                             "id": "4.2.2",
                             "name": "Registro de participantes del piloto",
-                            "description": "Base\/listado de participantes del piloto.",
+                            "description": "Base/listado de participantes del piloto.",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -1238,7 +1238,7 @@
                         {
                             "id": "4.2.4",
                             "name": "Informe de ajustes y mejoras post-piloto",
-                            "description": "Plan\/registro de mejoras identificadas.",
+                            "description": "Plan/registro de mejoras identificadas.",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -1268,7 +1268,7 @@
                         {
                             "id": "4.3.1",
                             "name": "Documento de transferencia de PI y derechos de autor",
-                            "description": "Cesión\/transferencia de PI sobre espacios curriculares y entregables.",
+                            "description": "Cesión/transferencia de PI sobre espacios curriculares y entregables.",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -1292,7 +1292,7 @@
                         {
                             "id": "4.3.3",
                             "name": "Paquete comprimido del micrositio y script de importación",
-                            "description": "Entregable técnico para despliegue\/publicación.",
+                            "description": "Entregable técnico para despliegue/publicación.",
                             "status": "no_iniciado",
                             "responsible": "",
                             "dueDate": "",
@@ -1303,7 +1303,7 @@
                         },
                         {
                             "id": "4.3.4",
-                            "name": "Guía de instalación\/despliegue de SCORM en Moodle",
+                            "name": "Guía de instalación/despliegue de SCORM en Moodle",
                             "description": "Instructivo técnico para cargar y operar paquetes.",
                             "status": "no_iniciado",
                             "responsible": "",

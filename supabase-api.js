@@ -118,13 +118,47 @@ const SupabaseAPI = (() => {
         };
     }
 
+    // Deep equality ignorando orden de claves — Postgres jsonb reordena las
+    // claves al persistir, lo que rompe la comparación con JSON.stringify directo
+    function jsonEqual(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return a == b;
+        if (typeof a !== typeof b) return false;
+        if (Array.isArray(a) !== Array.isArray(b)) return false;
+        if (Array.isArray(a)) {
+            if (a.length !== b.length) return false;
+            for (let i = 0; i < a.length; i++) if (!jsonEqual(a[i], b[i])) return false;
+            return true;
+        }
+        if (typeof a === 'object') {
+            const ka = Object.keys(a), kb = Object.keys(b);
+            if (ka.length !== kb.length) return false;
+            for (const k of ka) {
+                if (!Object.prototype.hasOwnProperty.call(b, k)) return false;
+                if (!jsonEqual(a[k], b[k])) return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
     // ---------- Deliverables ----------
     async function saveDeliverable(flatRow) {
         const body = normalizeDeliverableRow(flatRow);
-        // PostgREST upsert: POST con Prefer: resolution=merge-duplicates
         const headers = { 'Prefer': 'return=representation,resolution=merge-duplicates' };
-        await rest('POST', '/deliverables?on_conflict=entregable_id', [body], headers);
-        return { success: true };
+        const result = await rest('POST', '/deliverables?on_conflict=entregable_id', [body], headers);
+        // Verificar que el upsert realmente devolvió la fila — si está vacío,
+        // RLS probablemente bloqueó silenciosamente la escritura
+        if (!Array.isArray(result) || result.length === 0) {
+            throw new Error('Supabase no confirmó la escritura del entregable. Verifique el token de edición.');
+        }
+        // Verificar semánticamente que los cycles persistidos coinciden con lo enviado
+        if (!jsonEqual(body.cycles, result[0].cycles)) {
+            console.warn('[SupabaseAPI] Cycles persistidos ≠ enviados:', {
+                enviados: body.cycles, persistidos: result[0].cycles
+            });
+        }
+        return { success: true, row: result[0] };
     }
 
     async function syncAllDeliverables(flatRows) {
@@ -138,8 +172,11 @@ const SupabaseAPI = (() => {
     async function addHistory(entries) {
         const rows = (Array.isArray(entries) ? entries : [entries]).map(normalizeHistoryRow);
         if (rows.length === 0) return { success: true };
-        await rest('POST', '/history', rows);
-        return { success: true };
+        const result = await rest('POST', '/history', rows, { 'Prefer': 'return=representation' });
+        if (!Array.isArray(result) || result.length !== rows.length) {
+            throw new Error('Supabase no confirmó la escritura de history. Verifique el token de edición.');
+        }
+        return { success: true, rows: result };
     }
 
     async function syncHistory(flatRows) {
@@ -175,7 +212,10 @@ const SupabaseAPI = (() => {
 
     async function saveConfig(key, value) {
         const headers = { 'Prefer': 'return=representation,resolution=merge-duplicates' };
-        await rest('POST', '/config?on_conflict=clave', [{ clave: key, valor: String(value) }], headers);
+        const result = await rest('POST', '/config?on_conflict=clave', [{ clave: key, valor: String(value) }], headers);
+        if (!Array.isArray(result) || result.length === 0) {
+            throw new Error('Supabase no confirmó la escritura de config. Verifique el token de edición.');
+        }
         return { success: true };
     }
 

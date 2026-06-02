@@ -521,17 +521,33 @@
         </div>
     </div>
 
+    <!-- Matriz de Producción (modal iframe — solo se carga al abrir) -->
+    <div class="matriz-modal-overlay" id="matrizModal" onclick="if(event.target===this) closeMatrizModal()">
+        <div class="matriz-modal">
+            <div class="matriz-modal-header">
+                <div class="matriz-modal-title">
+                    <span class="matriz-modal-id">3.2.1</span>
+                    Matriz de producción · Banco de recursos interactivos
+                </div>
+                <button class="matriz-modal-close" onclick="closeMatrizModal()" aria-label="Cerrar matriz">&times;</button>
+            </div>
+            <div class="matriz-modal-body">
+                <iframe id="matrizIframe" title="Matriz de producción de recursos" loading="lazy"></iframe>
+            </div>
+        </div>
+    </div>
+
     <!-- Chart.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Configuration -->
-    <script src="config.js?v=20260518b"></script>
+    <script src="config.js?v=20260601a"></script>
     <!-- Google Sheets API Client (legacy fallback) -->
-    <script src="sheets-api.js?v=20260518b"></script>
+    <script src="sheets-api.js?v=20260601a"></script>
     <!-- Supabase API Client (active backend; aliasa como SheetsAPI si está configurado) -->
-    <script src="supabase-api.js?v=20260518b"></script>
+    <script src="supabase-api.js?v=20260601a"></script>
     <!-- Main JavaScript -->
-    <script src="app.js?v=20260518b"></script>
+    <script src="app.js?v=20260601a"></script>
     <!-- Deliverables Management -->
-    <script src="deliverables.js?v=20260518b"></script>
+    <script src="deliverables.js?v=20260601a"></script>
 </body>
 </html>

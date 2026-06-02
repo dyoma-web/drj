@@ -1522,7 +1522,7 @@ function renderStageProducts(stage) {
                     <span class="del-date">${formatDateShort(sched.endDate)}</span>
                     <span class="del-date-final">${formatDateShort(schedFull.endDate)}</span>
                     <span class="del-notes">${del.observations ? '<svg class="icon-notes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="13" y2="13"></line></svg>' : ''}</span>
-                    <span class="del-alert"><span class="alert-dot ${alertClass}"></span></span>
+                    <span class="del-alert">${del.id === '3.2.1' ? '<button class="btn-detalles" onclick="event.stopPropagation();openMatrizModal()" title="Ver matriz de producción de recursos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Detalles</button>' : ''}<span class="alert-dot ${alertClass}"></span></span>
                 </div>
             `;
         }
@@ -1889,18 +1889,29 @@ async function saveDeliverable() {
 
     try {
         if (dataSource === 'sheets' && window.SheetsAPI && SheetsAPI.isConfigured()) {
-            // Guardar en Google Sheets
-            const flatRow = flattenSingleDeliverable(deliverable, product, stage);
-            await SheetsAPI.saveDeliverable(flatRow);
-
-            // Agregar historial al sheet
-            if (newHistoryEntries.length > 0) {
-                SheetsAPI.addHistory(newHistoryEntries); // fire-and-forget
+            // Pre-flight: si Supabase está activo y no hay token, abortar con mensaje claro
+            if (window.SupabaseAPI && SupabaseAPI.isConfigured() && !SupabaseAPI.hasEditToken()) {
+                throw new Error('Falta el token de edición. Active el modo edición de nuevo e ingrese el token de Supabase.');
             }
 
-            // Actualizar última actualización en Config
+            const flatRow = flattenSingleDeliverable(deliverable, product, stage);
+            console.log('[Save] Entregable', deliverable.id, '· cycles:', deliverable.cycles?.length, 'ciclos · estado:', deliverable.status);
+
+            // Esperar TODAS las escrituras (no fire-and-forget) para que los errores
+            // de history/config no queden silenciosos
+            await SheetsAPI.saveDeliverable(flatRow);
+            console.log('[Save] Entregable persistido OK');
+
+            const promises = [];
+            if (newHistoryEntries.length > 0) {
+                console.log('[Save] Persistiendo', newHistoryEntries.length, 'entrada(s) de history');
+                promises.push(SheetsAPI.addHistory(newHistoryEntries));
+            }
             const now = formatLastUpdate();
-            SheetsAPI.saveConfig('ultima_actualizacion', now); // fire-and-forget
+            promises.push(SheetsAPI.saveConfig('ultima_actualizacion', now));
+            await Promise.all(promises);
+            console.log('[Save] History y config persistidos OK');
+
             const updEl = document.getElementById('lastUpdate');
             if (updEl) updEl.textContent = now;
         } else {
@@ -3001,6 +3012,33 @@ function renderBaselineDelta(overallImpact) {
     const sign = delta >= 0 ? '+' : '−';
     text.innerHTML = `<strong>Variación (Δ) vs cronograma planeado:</strong> <span class="baseline-delta-value">${sign}${absDelta.toFixed(2)} pts</span> · ${message}`;
     container.style.display = 'flex';
+}
+
+// ===================================
+// Matriz de producción (modal iframe) — Banco de recursos interactivos
+// ===================================
+function openMatrizModal() {
+    const overlay = document.getElementById('matrizModal');
+    const iframe = document.getElementById('matrizIframe');
+    if (!overlay || !iframe) return;
+    // Cargar la matriz solo la primera vez (lazy) y cachear
+    if (!iframe.src) iframe.src = 'avance/matriz.html';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Permitir cerrar con Esc
+    document.addEventListener('keydown', _matrizEscHandler);
+}
+
+function closeMatrizModal() {
+    const overlay = document.getElementById('matrizModal');
+    if (!overlay) return;
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', _matrizEscHandler);
+}
+
+function _matrizEscHandler(e) {
+    if (e.key === 'Escape') closeMatrizModal();
 }
 
 // ===================================
