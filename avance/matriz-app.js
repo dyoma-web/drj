@@ -1,6 +1,21 @@
-/* global React, ReactDOM, STATES, CICLOS, COURSES */
-const { useState, useMemo, useRef, useEffect } = React;
+/* global React, ReactDOM */
+const { useState, useMemo, useEffect } = React;
 
+// Constantes canónicas (no cambian, no necesitan BD)
+const STATES = [
+  { id: 'sin_iniciar',    label: 'Sin iniciar',    short: 'SI', color: '#94a3b8', soft: '#eef1f5', tone: '#475569', order: 0 },
+  { id: 'en_elaboracion', label: 'En elaboración', short: 'EL', color: '#3b82f6', soft: '#e6effe', tone: '#1d4ed8', order: 1 },
+  { id: 'en_revision',    label: 'En revisión',    short: 'RV', color: '#f59e0b', soft: '#fdf2dc', tone: '#b45309', order: 2 },
+  { id: 'en_ajustes',     label: 'En ajustes',     short: 'AJ', color: '#ef4444', soft: '#fde8e8', tone: '#b91c1c', order: 3 },
+  { id: 'implementado',   label: 'Implementado',   short: 'IM', color: '#14b8a6', soft: '#dcf5f1', tone: '#0f766e', order: 4 },
+  { id: 'aprobado',       label: 'Aprobado',       short: 'AP', color: '#16a34a', soft: '#ddf3e4', tone: '#15803d', order: 5 },
+];
+const CICLOS = [
+  { id: 'b1',  name: 'Básico 1',   color: '#2563eb', soft: '#e8effb' },
+  { id: 'b2',  name: 'Básico 2',   color: '#7c3aed', soft: '#efe8fb' },
+  { id: 'int', name: 'Intermedio', color: '#0891b2', soft: '#e0f2f7' },
+  { id: 'av',  name: 'Avanzado',   color: '#be185d', soft: '#fbe8f1' },
+];
 const STATE_BY = Object.fromEntries(STATES.map((s) => [s.id, s]));
 const CICLO_BY = Object.fromEntries(CICLOS.map((c) => [c.id, c]));
 const COLS = [
@@ -14,31 +29,9 @@ const COLS = [
   { key: 'h5p', label: 'Caso H5P', kind: 'h5p' },
 ];
 
-function buildItems() {
-  const items = [];
-  COURSES.forEach((c) => {
-    c.umas.forEach((u) => {
-      u.resources.forEach((r, ri) => {
-        items.push({ id: `c${c.num}-u${u.num}-r${ri}`, course: c, col: 'u' + u.num, uma: u, res: r, kind: 'uma' });
-      });
-    });
-    if (c.cierre) items.push({ id: `c${c.num}-cierre`, course: c, col: 'cierre', uma: null, res: c.cierre, kind: 'cierre' });
-    if (c.h5p) items.push({ id: `c${c.num}-h5p`, course: c, col: 'h5p', uma: null, res: c.h5p, kind: 'h5p' });
-  });
-  return items;
-}
-const ALL_ITEMS = buildItems();
 const pad2 = (n) => String(n).padStart(2, '0');
 
-const OVERRIDES_KEY = 'drj_matriz_overrides_v1';
-function loadOverrides() {
-  try { return JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}'); } catch (e) { return {}; }
-}
-function saveOverrides(o) {
-  try { localStorage.setItem(OVERRIDES_KEY, JSON.stringify(o)); } catch (e) {}
-}
-
-// Valores fijos (eran tweaks en el original, ahora constantes)
+// Valores fijos de presentación
 const T = {
   shape: 'rounded',
   fill: 'solid',
@@ -48,57 +41,198 @@ const T = {
   accent: '#1e40af',
 };
 
+// ============================================================
+// API Supabase (REST). Lee de window.SB_CONFIG inyectado por matriz.html.
+// ============================================================
+const SB = window.SB_CONFIG || {};
+
+function getEditToken() {
+  // Intenta leer del parent (cuando matriz se abre como iframe del dashboard)
+  try {
+    if (window.parent && window.parent !== window) {
+      const t = window.parent.localStorage.getItem('drj_edit_token');
+      if (t) return t;
+    }
+  } catch (e) { /* cross-origin: ignorar */ }
+  // Fallback al propio localStorage (modo standalone)
+  try { return localStorage.getItem('drj_edit_token') || ''; } catch (e) { return ''; }
+}
+
+async function sbRequest(method, path, body, extraHeaders) {
+  if (!SB.url || !SB.publishableKey) throw new Error('SB_CONFIG no inyectado');
+  const h = {
+    apikey: SB.publishableKey,
+    Authorization: 'Bearer ' + SB.publishableKey,
+    'Content-Type': 'application/json',
+  };
+  if (method !== 'GET') {
+    const tk = getEditToken();
+    if (tk) h['x-edit-token'] = tk;
+  }
+  Object.assign(h, extraHeaders || {});
+  const opts = { method, headers: h };
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  const res = await fetch(SB.url.replace(/\/$/, '') + '/rest/v1' + path, opts);
+  if (!res.ok) {
+    let detail = '';
+    try { detail = await res.text(); } catch (_) {}
+    throw new Error(`Supabase ${method} ${path} → ${res.status} ${detail || res.statusText}`);
+  }
+  if (res.status === 204) return null;
+  const txt = await res.text();
+  return txt ? JSON.parse(txt) : null;
+}
+
+async function loadMatrizData() {
+  const [coursesRaw, umasRaw, resourcesRaw] = await Promise.all([
+    sbRequest('GET', '/matriz_courses?select=*&order=sort_order'),
+    sbRequest('GET', '/matriz_umas?select=*&order=sort_order'),
+    sbRequest('GET', '/matriz_resources?select=*&order=sort_order'),
+  ]);
+  // Reconstruir estructura jerárquica que espera la app
+  const umasByCourse = {};
+  umasRaw.forEach((u) => {
+    (umasByCourse[u.course_id] = umasByCourse[u.course_id] || []).push(u);
+  });
+  const resByCourseUma = {};
+  const resByCourseKind = {};
+  resourcesRaw.forEach((r) => {
+    if (r.kind === 'uma') {
+      const k = r.course_id + '|' + r.uma_id;
+      (resByCourseUma[k] = resByCourseUma[k] || []).push(r);
+    } else {
+      resByCourseKind[r.course_id + '|' + r.kind] = r;
+    }
+  });
+  return coursesRaw.map((c) => ({
+    num: c.num,
+    ciclo: c.ciclo,
+    name: c.name,
+    umas: (umasByCourse[c.id] || []).map((u) => ({
+      num: u.num,
+      name: u.name,
+      resources: (resByCourseUma[c.id + '|' + u.id] || []).map((r) => ({
+        id: r.id,
+        type: r.type, label: r.label, asesor: r.asesor,
+        fecha: r.fecha || '', raw: r.raw_status || '',
+        state: r.state || 'sin_iniciar',
+      })),
+    })),
+    cierre: resByCourseKind[c.id + '|cierre'] ? mapRes(resByCourseKind[c.id + '|cierre']) : null,
+    h5p:    resByCourseKind[c.id + '|h5p']    ? mapRes(resByCourseKind[c.id + '|h5p'])    : null,
+  }));
+}
+
+function mapRes(r) {
+  return {
+    id: r.id,
+    type: r.type, label: r.label, asesor: r.asesor,
+    fecha: r.fecha || '', raw: r.raw_status || '',
+    state: r.state || 'sin_iniciar',
+  };
+}
+
+async function updateResourceState(resourceId, newState) {
+  const result = await sbRequest(
+    'PATCH',
+    '/matriz_resources?id=eq.' + encodeURIComponent(resourceId),
+    { state: newState },
+    { 'Prefer': 'return=representation' }
+  );
+  if (!Array.isArray(result) || result.length === 0) {
+    throw new Error('La actualización fue bloqueada. Verifique que tiene el token de edición.');
+  }
+  return result[0];
+}
+
+// ============================================================
+// App
+// ============================================================
 function App() {
-  const [overrides, setOverrides] = useState(loadOverrides);
+  const [courses, setCourses] = useState(null);   // null = cargando, [] = vacío, [...] = cargado
+  const [loadError, setLoadError] = useState(null);
   const [activeCiclos, setActiveCiclos] = useState(() => new Set(CICLOS.map((c) => c.id)));
   const [activeStates, setActiveStates] = useState(() => new Set());
   const [asesor, setAsesor] = useState('');
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(null);
   const [tip, setTip] = useState(null);
+  const [savingId, setSavingId] = useState(null);
+  const [toast, setToast] = useState(null);
 
-  useEffect(() => { saveOverrides(overrides); }, [overrides]);
+  useEffect(() => {
+    loadMatrizData()
+      .then((d) => setCourses(d))
+      .catch((e) => { console.error(e); setLoadError(e.message); });
+  }, []);
 
-  const effState = (it) => overrides[it.id] || it.res.state;
+  const items = useMemo(() => {
+    if (!courses) return [];
+    const out = [];
+    courses.forEach((c) => {
+      c.umas.forEach((u) => {
+        u.resources.forEach((r) => {
+          out.push({ id: r.id, course: c, col: 'u' + u.num, uma: u, res: r, kind: 'uma' });
+        });
+      });
+      if (c.cierre) out.push({ id: c.cierre.id, course: c, col: 'cierre', uma: null, res: c.cierre, kind: 'cierre' });
+      if (c.h5p)    out.push({ id: c.h5p.id,    course: c, col: 'h5p',    uma: null, res: c.h5p,    kind: 'h5p' });
+    });
+    return out;
+  }, [courses]);
 
   const cellMap = useMemo(() => {
     const m = {};
-    ALL_ITEMS.forEach((it) => {
+    items.forEach((it) => {
       const k = it.course.num + ':' + it.col;
       (m[k] = m[k] || []).push(it);
     });
     return m;
-  }, []);
+  }, [items]);
 
   const asesores = useMemo(() => {
     const s = new Set();
-    ALL_ITEMS.forEach((it) => it.res.asesor && s.add(it.res.asesor));
+    items.forEach((it) => it.res.asesor && s.add(it.res.asesor));
     return [...s].sort();
-  }, []);
+  }, [items]);
 
   const counts = useMemo(() => {
     const c = Object.fromEntries(STATES.map((s) => [s.id, 0]));
     let total = 0;
-    ALL_ITEMS.forEach((it) => {
+    items.forEach((it) => {
       if (!activeCiclos.has(it.course.ciclo)) return;
-      c[effState(it)]++; total++;
+      c[it.res.state]++; total++;
     });
     return { c, total };
-  }, [activeCiclos, overrides]);
+  }, [activeCiclos, items]);
+
+  // Render: carga / error / contenido
+  if (loadError) {
+    return (
+      <div style={S.errorBox}>
+        <h2 style={{margin:0, fontSize:18}}>No se pudo cargar la matriz</h2>
+        <p style={{margin:'8px 0 16px', color:'#5b6577', fontSize:13}}>{loadError}</p>
+        <button style={S.errorBtn} onClick={() => location.reload()}>Reintentar</button>
+      </div>
+    );
+  }
+  if (!courses) {
+    return <div style={S.loadingBox}>Cargando matriz desde Supabase…</div>;
+  }
 
   const q = query.trim().toLowerCase();
   const matches = (it) => {
     if (asesor && it.res.asesor !== asesor) return false;
     if (q) {
-      const hay = (it.course.name + ' ' + (it.uma ? it.uma.name : '') + ' ' + it.res.asesor).toLowerCase();
+      const hay = (it.course.name + ' ' + (it.uma ? it.uma.name : '') + ' ' + (it.res.asesor || '')).toLowerCase();
       if (!hay.includes(q)) return false;
     }
-    if (activeStates.size && !activeStates.has(effState(it))) return false;
+    if (activeStates.size && !activeStates.has(it.res.state)) return false;
     return true;
   };
   const anyFilter = !!asesor || !!q || activeStates.size > 0;
 
-  const visibleCourses = COURSES.filter((c) => activeCiclos.has(c.ciclo));
+  const visibleCourses = courses.filter((c) => activeCiclos.has(c.ciclo));
 
   const toggleCiclo = (id) => {
     setActiveCiclos((prev) => {
@@ -113,6 +247,48 @@ function App() {
       n.has(id) ? n.delete(id) : n.add(id);
       return n;
     });
+  };
+
+  // Cambio de estado: optimistic update + REST PATCH. Si falla, revertir.
+  const handleSetState = async (resourceId, newState) => {
+    let prevState = null;
+    setSavingId(resourceId);
+    setCourses((prev) => prev.map((c) => ({
+      ...c,
+      umas: c.umas.map((u) => ({
+        ...u,
+        resources: u.resources.map((r) => {
+          if (r.id === resourceId) { prevState = r.state; return { ...r, state: newState }; }
+          return r;
+        }),
+      })),
+      cierre: c.cierre && c.cierre.id === resourceId
+        ? (prevState = c.cierre.state, { ...c.cierre, state: newState })
+        : c.cierre,
+      h5p: c.h5p && c.h5p.id === resourceId
+        ? (prevState = c.h5p.state, { ...c.h5p, state: newState })
+        : c.h5p,
+    })));
+    try {
+      await updateResourceState(resourceId, newState);
+      setSavingId(null);
+      setToast({ ok: true, msg: 'Estado actualizado' });
+      setTimeout(() => setToast(null), 1800);
+    } catch (e) {
+      // Revertir
+      setCourses((prev) => prev.map((c) => ({
+        ...c,
+        umas: c.umas.map((u) => ({
+          ...u,
+          resources: u.resources.map((r) => r.id === resourceId ? { ...r, state: prevState } : r),
+        })),
+        cierre: c.cierre && c.cierre.id === resourceId ? { ...c.cierre, state: prevState } : c.cierre,
+        h5p:    c.h5p    && c.h5p.id    === resourceId ? { ...c.h5p,    state: prevState } : c.h5p,
+      })));
+      setSavingId(null);
+      setToast({ ok: false, msg: e.message || 'Error al guardar' });
+      setTimeout(() => setToast(null), 4500);
+    }
   };
 
   const cellH = T.density === 'compact' ? 30 : T.density === 'comfy' ? 52 : 40;
@@ -188,25 +364,25 @@ function App() {
               </div>
 
               {CICLOS.filter((cc) => activeCiclos.has(cc.id)).map((cc) => {
-                const courses = visibleCourses.filter((c) => c.ciclo === cc.id);
+                const cs = visibleCourses.filter((c) => c.ciclo === cc.id);
                 return (
                   <div key={cc.id}>
                     <div style={{ ...S.cicloBand, background: cc.soft, color: cc.color, borderLeft: `4px solid ${cc.color}` }}>
                       <span style={{ ...S.cicloBandDot, background: cc.color }} />
                       {cc.name}
-                      <span style={S.cicloBandCount}>{courses.length} cursos</span>
+                      <span style={S.cicloBandCount}>{cs.length} cursos</span>
                     </div>
 
-                    {courses.map((course) => (
+                    {cs.map((course) => (
                       <div key={course.num} style={{ display: 'grid', gridTemplateColumns: gridTemplate, marginBottom: rowGap }}>
-                        <CourseNav course={course} cc={cc} items={ALL_ITEMS.filter((it) => it.course.num === course.num)}
-                          effState={effState} showBars={T.showBars} h={cellH} />
+                        <CourseNav course={course} cc={cc} items={items.filter((it) => it.course.num === course.num)}
+                          showBars={T.showBars} h={cellH} />
                         {COLS.map((col) => {
-                          const items = cellMap[course.num + ':' + col.key] || [];
+                          const its = cellMap[course.num + ':' + col.key] || [];
                           return (
-                            <Cell key={col.key} items={items} col={col} t={T} h={cellH}
-                              effState={effState} matches={matches} anyFilter={anyFilter}
-                              onTip={setTip} onClick={() => items.length && setSelected({ course, col })} />
+                            <Cell key={col.key} items={its} col={col} t={T} h={cellH}
+                              matches={matches} anyFilter={anyFilter}
+                              onTip={setTip} onClick={() => its.length && setSelected({ course, col })} />
                           );
                         })}
                       </div>
@@ -236,16 +412,20 @@ function App() {
       )}
 
       {selected && (
-        <Drawer selected={selected} cellMap={cellMap} effState={effState}
+        <Drawer selected={selected} cellMap={cellMap}
           onClose={() => setSelected(null)}
-          onSetState={(id, st) => setOverrides((o) => ({ ...o, [id]: st }))} />
+          onSetState={handleSetState} savingId={savingId} />
+      )}
+
+      {toast && (
+        <div style={{ ...S.toast, background: toast.ok ? '#16a34a' : '#dc2626' }}>{toast.msg}</div>
       )}
     </div>
   );
 }
 
-function CourseNav({ course, cc, items, effState, showBars, h }) {
-  const segs = STATES.map((s) => ({ s, n: items.filter((it) => effState(it) === s.id).length })).filter((x) => x.n);
+function CourseNav({ course, cc, items, showBars, h }) {
+  const segs = STATES.map((s) => ({ s, n: items.filter((it) => it.res.state === s.id).length })).filter((x) => x.n);
   const total = items.length;
   return (
     <div style={{ ...S.navCell, minHeight: h, borderLeft: `3px solid ${cc.color}` }}>
@@ -264,7 +444,7 @@ function CourseNav({ course, cc, items, effState, showBars, h }) {
   );
 }
 
-function Cell({ items, col, t, h, effState, matches, anyFilter, onTip, onClick }) {
+function Cell({ items, col, t, h, matches, anyFilter, onTip, onClick }) {
   if (!items.length) {
     return <div style={{ ...S.cellWrap, minHeight: h }}><div style={S.cellEmpty}>·</div></div>;
   }
@@ -277,7 +457,7 @@ function Cell({ items, col, t, h, effState, matches, anyFilter, onTip, onClick }
       <div style={{ display: 'flex', gap: 3, width: isDot ? 'auto' : '100%', height: isDot ? 'auto' : '100%', alignItems: 'center', justifyContent: 'center' }}
         onClick={onClick} role="button">
         {items.map((it) => {
-          const st = STATE_BY[effState(it)];
+          const st = STATE_BY[it.res.state];
           const bg = t.fill === 'soft' ? st.soft : st.color;
           const fg = t.fill === 'soft' ? st.tone : '#fff';
           const label = t.cellLabel === 'code' ? st.short : t.cellLabel === 'uma' ? (it.uma ? it.uma.num : (it.kind === 'h5p' ? 'H5' : 'C')) : '';
@@ -287,7 +467,7 @@ function Cell({ items, col, t, h, effState, matches, anyFilter, onTip, onClick }
                 border: t.fill === 'soft' ? `1px solid ${st.color}33` : 'none' };
           return (
             <div key={it.id} className="matrix-seg" style={{ ...S.seg, ...dotStyle }}
-              onMouseEnter={(e) => onTip({ x: e.clientX, y: e.clientY, state: effState(it),
+              onMouseEnter={(e) => onTip({ x: e.clientX, y: e.clientY, state: it.res.state,
                 title: it.uma ? `Curso ${it.course.num} · UMA ${it.uma.num}` : `Curso ${it.course.num} · ${col.label}`,
                 sub: it.uma ? it.uma.name : it.res.label, asesor: it.res.asesor, fecha: it.res.fecha, raw: it.res.raw })}
               onMouseLeave={() => onTip(null)}>
@@ -300,7 +480,7 @@ function Cell({ items, col, t, h, effState, matches, anyFilter, onTip, onClick }
   );
 }
 
-function Drawer({ selected, cellMap, effState, onClose, onSetState }) {
+function Drawer({ selected, cellMap, onClose, onSetState, savingId }) {
   const { course, col } = selected;
   const items = cellMap[course.num + ':' + col.key] || [];
   const cc = CICLO_BY[course.ciclo];
@@ -317,9 +497,10 @@ function Drawer({ selected, cellMap, effState, onClose, onSetState }) {
         </div>
         <div style={S.drawerBody}>
           {items.map((it) => {
-            const cur = effState(it);
+            const cur = it.res.state;
+            const saving = savingId === it.id;
             return (
-              <div key={it.id} style={S.resCard}>
+              <div key={it.id} style={{ ...S.resCard, opacity: saving ? 0.6 : 1 }}>
                 <div style={S.resType}>{it.res.type}</div>
                 {it.uma && <div style={S.resUma}>UMA {it.uma.num} — {it.uma.name}</div>}
                 {!it.uma && <div style={S.resUma}>{it.res.label}</div>}
@@ -330,9 +511,11 @@ function Drawer({ selected, cellMap, effState, onClose, onSetState }) {
                 {it.res.raw && <div style={S.resRaw}>Estado en hoja: «{it.res.raw}»</div>}
                 <div style={S.stateRow}>
                   {STATES.map((s) => (
-                    <button key={s.id} onClick={() => onSetState(it.id, s.id)}
+                    <button key={s.id} disabled={saving} onClick={() => !saving && cur !== s.id && onSetState(it.id, s.id)}
                       style={{ ...S.stateBtn, background: cur === s.id ? s.color : s.soft,
-                        color: cur === s.id ? '#fff' : s.tone, borderColor: cur === s.id ? s.color : 'transparent' }}>
+                        color: cur === s.id ? '#fff' : s.tone,
+                        borderColor: cur === s.id ? s.color : 'transparent',
+                        cursor: saving ? 'wait' : 'pointer' }}>
                       {s.label}
                     </button>
                   ))}
@@ -354,6 +537,10 @@ const S = {
   cardHead: { marginBottom: 16 },
   h1: { margin: 0, fontSize: 20, fontWeight: 700, letterSpacing: -0.3 },
   lede: { margin: '6px 0 0', fontSize: 13.5, lineHeight: 1.5, color: '#5b6577', maxWidth: 860 },
+
+  loadingBox: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8a93a4', fontSize: 14, fontFamily: "'Inter',system-ui,sans-serif" },
+  errorBox: { minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, textAlign: 'center', fontFamily: "'Inter',system-ui,sans-serif" },
+  errorBtn: { padding: '8px 18px', fontSize: 13, fontWeight: 600, border: '1px solid #1d4ed8', background: '#1d4ed8', color: '#fff', borderRadius: 8, cursor: 'pointer' },
 
   legend: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, padding: '12px 0 14px', borderTop: '1px solid #eef1f6', borderBottom: '1px solid #eef1f6' },
   legChip: { display: 'inline-flex', alignItems: 'center', gap: 7, padding: '5px 9px 5px 8px', borderRadius: 999, border: '1px solid #e5e8ef', cursor: 'pointer', font: 'inherit', transition: 'all .12s' },
@@ -407,13 +594,15 @@ const S = {
   drawerId: { font: `700 11px ${MONO}`, color: '#cf3a3a', marginTop: 10 },
   drawerTitle: { fontSize: 16, fontWeight: 700, lineHeight: 1.3, marginTop: 4, color: '#1f2738', paddingRight: 20 },
   drawerBody: { padding: 18, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12 },
-  resCard: { border: '1px solid #e9ecf3', borderRadius: 10, padding: '13px 14px', background: '#fbfcfe' },
+  resCard: { border: '1px solid #e9ecf3', borderRadius: 10, padding: '13px 14px', background: '#fbfcfe', transition: 'opacity .15s' },
   resType: { display: 'inline-block', fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#5b6577', background: '#eef1f6', padding: '2px 8px', borderRadius: 5 },
   resUma: { fontSize: 13.5, fontWeight: 600, color: '#2a3447', marginTop: 8, lineHeight: 1.35 },
   resMeta: { display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: 12, color: '#5b6577', marginTop: 8 },
   resRaw: { fontSize: 11.5, color: '#9aa3b2', fontStyle: 'italic', marginTop: 7 },
   stateRow: { display: 'flex', flexWrap: 'wrap', gap: 5, marginTop: 11 },
-  stateBtn: { font: 'inherit', fontSize: 11, fontWeight: 600, padding: '5px 9px', borderRadius: 999, border: '1px solid transparent', cursor: 'pointer', transition: 'all .1s' },
+  stateBtn: { font: 'inherit', fontSize: 11, fontWeight: 600, padding: '5px 9px', borderRadius: 999, border: '1px solid transparent', transition: 'all .1s' },
+
+  toast: { position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, boxShadow: '0 8px 24px rgba(0,0,0,.18)', zIndex: 9999 },
 };
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);

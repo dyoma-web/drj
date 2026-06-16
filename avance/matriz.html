@@ -35,11 +35,16 @@
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
 
-<!-- Datos (anonimizados, sin links) -->
-<script src="matriz-data.js"></script>
+<!-- Configuración Supabase (publishable key, seguro en cliente) -->
+<script>
+  window.SB_CONFIG = {
+    url: 'https://zgvyvilcdegnothphuhu.supabase.co',
+    publishableKey: 'sb_publishable_2WiOs48ybni93JsvM2GrJg_xkxNO3MA'
+  };
+</script>
 
-<!-- App -->
-<script type="text/babel" data-presets="react" src="matriz-app.js"></script>
+<!-- App (lee datos de Supabase; el token de edición se toma del parent window) -->
+<script type="text/babel" data-presets="react" src="matriz-app.js?v=20260616a"></script>
 
 </body>
 </html>

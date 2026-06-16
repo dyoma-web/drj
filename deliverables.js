@@ -3024,7 +3024,7 @@ function openMatrizModal() {
     const iframe = document.getElementById('matrizIframe');
     if (!overlay || !iframe) return;
     // Cargar la matriz solo la primera vez (lazy) y cachear
-    if (!iframe.src) iframe.src = 'avance/matriz.html';
+    if (!iframe.src) iframe.src = 'avance/matriz.html?v=20260616a';
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
     // Permitir cerrar con Esc
