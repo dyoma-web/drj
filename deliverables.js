@@ -82,6 +82,21 @@ const STATUS_CONFIG = {
     'aprobado':       { label: 'Aprobado',        progress: 100 }
 };
 
+// Pesos del indicador "Avance por Completitud": avance según el ESTADO de
+// aprobación del entregable (no por esfuerzo/actividades). Cada entregable cuenta
+// igual, sin ponderar por su aporte contractual. Ver getCompletitudProgress().
+const COMPLETITUD_WEIGHTS = {
+    'no_iniciado':    0,
+    'en_elaboracion': 70,
+    'enviado':        70,
+    'en_revision':    85,
+    'en_ajuste':      95,
+    'aprobado':       100
+};
+// Factor de dilución para rondas reabiertas (revisión/ajuste adicionales).
+// Mayor K → incrementos más pequeños por cada ronda extra.
+const COMPLETITUD_DILUTION_K = 4;
+
 const ABSOLUTE_STATES = ['no_iniciado', 'enviado', 'aprobado'];
 const PROCESS_STATES  = ['en_elaboracion', 'en_revision', 'en_ajuste'];
 const MILESTONE_STATES = ['enviado', 'aprobado'];
@@ -566,6 +581,72 @@ function getDeliverableProgressFromCycles(del) {
     }
 
     return Math.min(100, Math.round(progress));
+}
+
+/**
+ * Avance por Completitud de un entregable, en [0,100].
+ * Pondera por el ESTADO del entregable (no por esfuerzo/actividades):
+ *   no_iniciado 0 · en_elaboracion/enviado 70 · en_revision 85 · en_ajuste 95 · aprobado 100
+ * Regla monotónica: el valor NUNCA retrocede. Cuando se reabre una fase
+ * (p.ej. una nueva ronda de revisión tras un ajuste) el avance no vuelve atrás,
+ * sino que se "diluye" acercándose gradualmente a 100:
+ *   avance = base + (100 - base) * rondasExtra / (rondasExtra + K)
+ * Usa del.history (recorrido real) cuando existe; si no, el estado actual.
+ */
+function getCompletitudProgress(del) {
+    // Secuencia de estados recorridos, en orden cronológico
+    let seq = [];
+    if (Array.isArray(del.history) && del.history.length) {
+        seq = del.history
+            .filter(h => h && h.status && COMPLETITUD_WEIGHTS[h.status] !== undefined)
+            .slice()
+            .sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')))
+            .map(h => h.status);
+    }
+    const current = (del.status && COMPLETITUD_WEIGHTS[del.status] !== undefined) ? del.status : null;
+    if (current && (seq.length === 0 || seq[seq.length - 1] !== current)) seq.push(current);
+
+    // Estados "no_iniciado" no aportan recorrido
+    seq = seq.filter(s => s !== 'no_iniciado');
+    if (seq.length === 0) return 0;
+    if (current === 'aprobado' || seq.includes('aprobado')) return 100;
+
+    let base = 0, maxOrderIdx = -1, extraRounds = 0;
+    for (const s of seq) {
+        const idx = DEFAULT_PHASE_ORDER.indexOf(s);
+        if (idx > maxOrderIdx) {
+            // Avance hacia adelante: el piso sube al peso de esta fase
+            maxOrderIdx = idx;
+            base = COMPLETITUD_WEIGHTS[s];
+        } else {
+            // Fase repetida/reabierta: no retrocede, se diluye hacia 100
+            extraRounds++;
+        }
+    }
+    if (base >= 100) return 100;
+    return base + (100 - base) * extraRounds / (extraRounds + COMPLETITUD_DILUTION_K);
+}
+
+/**
+ * Resumen de "Avance por Completitud" de una etapa:
+ *  - avg: promedio simple (cada entregable cuenta igual)
+ *  - count: número de entregables
+ *  - byStatus: conteo de entregables por estado actual
+ */
+function getStageCompletitud(stage) {
+    let sum = 0, count = 0;
+    const byStatus = {};
+    Object.keys(COMPLETITUD_WEIGHTS).forEach(s => byStatus[s] = 0);
+    for (const product of stage.products) {
+        for (const del of product.deliverables) {
+            ensureCycles(del);
+            sum += getCompletitudProgress(del);
+            count++;
+            const st = (del.status && COMPLETITUD_WEIGHTS[del.status] !== undefined) ? del.status : 'no_iniciado';
+            byStatus[st] = (byStatus[st] || 0) + 1;
+        }
+    }
+    return { avg: count > 0 ? sum / count : 0, count, byStatus };
 }
 
 // Get active phase status for a phase within a cycle context
@@ -1567,15 +1648,26 @@ function renderDeliverablesSummaryTable() {
         const weight = STAGE_WEIGHTS[stage.id] || 0;
         overallImpact += (avgProgress * weight) / 100;
 
+        // Avance por Completitud (según estado, cada entregable cuenta igual)
+        const comp = getStageCompletitud(stage);
+
         const row = document.createElement('tr');
         row.innerHTML = `
             <td><strong>${stage.name}</strong></td>
             <td class="text-center">${weight}%</td>
             <td class="text-center"><strong>${avgProgress.toFixed(1)}%</strong></td>
+            <td class="text-center"><strong>${comp.avg.toFixed(1)}%</strong></td>
             <td class="text-center">${aprobados} / ${totalDel}</td>
         `;
         tbody.appendChild(row);
     }
+
+    // Sección y KPI de "Avance por Completitud" (devuelve el global)
+    const overallCompletitud = renderCompletitudSection();
+    const completitudEl = document.getElementById('completitudProgress');
+    if (completitudEl) completitudEl.textContent = overallCompletitud.toFixed(1) + '%';
+    const completitudBar = document.getElementById('completitudProgressBar');
+    if (completitudBar) completitudBar.style.width = Math.min(100, overallCompletitud).toFixed(1) + '%';
 
     // KPI Avance por Impacto
     const impactEl = document.getElementById('impactProgress');
@@ -1619,6 +1711,63 @@ function renderDeliverablesSummaryTable() {
 
     const tasksEl = document.getElementById('tasksCompleted');
     if (tasksEl) tasksEl.textContent = Math.round(completedActividades) + ' de ' + totalActividades + ' actividades';
+}
+
+// ===================================
+// Sección "Avance por Completitud de Entregables"
+// ===================================
+/** Renderiza la tabla de completitud por etapa y devuelve el avance global (%). */
+function renderCompletitudSection() {
+    if (!deliverablesData) return 0;
+    const tbody = document.getElementById('completitudSummaryBody');
+
+    // Total de entregables del proyecto (para el peso relativo de cada etapa)
+    let totalDelAll = 0;
+    for (const stage of deliverablesData.stages) {
+        for (const product of stage.products) totalDelAll += product.deliverables.length;
+    }
+
+    const statusOrder = ['no_iniciado', 'en_elaboracion', 'enviado', 'en_revision', 'en_ajuste', 'aprobado'];
+    let globalSum = 0, globalCount = 0;
+
+    if (tbody) tbody.innerHTML = '';
+
+    for (const stage of deliverablesData.stages) {
+        const comp = getStageCompletitud(stage);
+        globalSum += comp.avg * comp.count;
+        globalCount += comp.count;
+        const pesoRel = totalDelAll > 0 ? (comp.count / totalDelAll) * 100 : 0;
+
+        if (!tbody) continue;
+
+        let chips = '';
+        for (const st of statusOrder) {
+            const n = comp.byStatus[st] || 0;
+            if (n === 0) continue;
+            const label = STATUS_CONFIG[st] ? STATUS_CONFIG[st].label : st;
+            chips += `<span class="completitud-chip" style="--chip-color:${STATUS_COLORS[st]}" title="${label}">`
+                  +  `<span class="completitud-chip-dot"></span>${label}: <strong>${n}</strong></span>`;
+        }
+        if (!chips) chips = '<span class="completitud-chip-empty">Sin entregables</span>';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><strong>${stage.name}</strong></td>
+            <td><div class="completitud-chips">${chips}</div></td>
+            <td class="text-center">${comp.count}</td>
+            <td class="text-center">${pesoRel.toFixed(1)}%</td>
+            <td class="text-center">
+                <strong class="completitud-val">${comp.avg.toFixed(1)}%</strong>
+                <div class="completitud-minibar"><div class="completitud-minibar-fill" style="width:${Math.min(100, comp.avg).toFixed(1)}%"></div></div>
+            </td>
+        `;
+        tbody.appendChild(row);
+    }
+
+    const overall = globalCount > 0 ? globalSum / globalCount : 0;
+    const gEl = document.getElementById('completitudGlobalValue');
+    if (gEl) gEl.textContent = overall.toFixed(1) + '%';
+    return overall;
 }
 
 // ===================================
@@ -2604,6 +2753,7 @@ function populateReport() {
     // === 1. Avance físico acumulado ===
     let overallImpact = 0;
     let totalAct = 0, completedAct = 0;
+    let compSum = 0, compCount = 0;
     const stageRows = [];
 
     for (const stage of deliverablesData.stages) {
@@ -2624,21 +2774,30 @@ function populateReport() {
         const avgProgress = sumAct > 0 ? sumWeighted / sumAct : 0;
         const weight = STAGE_WEIGHTS[stage.id] || 0;
         overallImpact += (avgProgress * weight) / 100;
-        stageRows.push({ name: stage.name, weight, avgProgress, aprobados, totalDel, stageId: stage.id });
+        // Avance por Completitud (según estado, cada entregable cuenta igual)
+        const comp = getStageCompletitud(stage);
+        compSum += comp.avg * comp.count;
+        compCount += comp.count;
+        stageRows.push({ name: stage.name, weight, avgProgress, completitud: comp.avg, aprobados, totalDel, stageId: stage.id });
     }
 
     const overallPhys = totalAct > 0 ? (completedAct / totalAct) * 100 : 0;
+    const overallCompletitud = compCount > 0 ? compSum / compCount : 0;
 
     document.getElementById('reportImpactProgress').textContent = overallImpact.toFixed(2) + '%';
     document.getElementById('reportImpactBar').style.width = Math.min(100, overallImpact).toFixed(2) + '%';
     document.getElementById('reportPhysProgress').textContent = overallPhys.toFixed(2) + '%';
     document.getElementById('reportPhysBar').style.width = Math.min(100, overallPhys).toFixed(2) + '%';
+    const rCompEl = document.getElementById('reportCompletitudProgress');
+    if (rCompEl) rCompEl.textContent = overallCompletitud.toFixed(2) + '%';
+    const rCompBar = document.getElementById('reportCompletitudBar');
+    if (rCompBar) rCompBar.style.width = Math.min(100, overallCompletitud).toFixed(2) + '%';
 
     const stageBody = document.getElementById('reportStageBody');
     stageBody.innerHTML = '';
     for (const r of stageRows) {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${r.name}</td><td class="text-center">${r.weight}%</td><td class="text-center"><strong>${r.avgProgress.toFixed(1)}%</strong></td><td class="text-center">${r.aprobados} / ${r.totalDel}</td>`;
+        tr.innerHTML = `<td>${r.name}</td><td class="text-center">${r.weight}%</td><td class="text-center"><strong>${r.avgProgress.toFixed(1)}%</strong></td><td class="text-center"><strong>${r.completitud.toFixed(1)}%</strong></td><td class="text-center">${r.aprobados} / ${r.totalDel}</td>`;
         stageBody.appendChild(tr);
     }
 
@@ -2792,17 +2951,19 @@ function copyReportToClipboard() {
     text += '─────────────────────────\n';
     const impactEl = document.getElementById('reportImpactProgress');
     const physEl = document.getElementById('reportPhysProgress');
+    const compEl = document.getElementById('reportCompletitudProgress');
     text += 'Avance por Impacto Contractual: ' + (impactEl ? impactEl.textContent : '--') + '\n';
-    text += 'Avance Físico (actividades):    ' + (physEl ? physEl.textContent : '--') + '\n\n';
+    text += 'Avance Físico (actividades):    ' + (physEl ? physEl.textContent : '--') + '\n';
+    text += 'Avance por Completitud:         ' + (compEl ? compEl.textContent : '--') + '\n\n';
 
     // Stage breakdown
     const stageBody = document.getElementById('reportStageBody');
     if (stageBody) {
-        text += 'Desglose por etapa:\n';
+        text += 'Desglose por etapa (Peso | Avance | Completitud | Entregables):\n';
         for (const tr of stageBody.querySelectorAll('tr')) {
             const cells = tr.querySelectorAll('td');
-            if (cells.length >= 4) {
-                text += '  • ' + cells[0].textContent.padEnd(45) + cells[1].textContent.padStart(5) + '  ' + cells[2].textContent.padStart(7) + '  ' + cells[3].textContent + '\n';
+            if (cells.length >= 5) {
+                text += '  • ' + cells[0].textContent.padEnd(45) + cells[1].textContent.padStart(5) + '  ' + cells[2].textContent.padStart(7) + '  ' + cells[3].textContent.padStart(7) + '  ' + cells[4].textContent + '\n';
             }
         }
         text += '\n';

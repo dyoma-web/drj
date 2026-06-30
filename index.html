@@ -62,21 +62,37 @@
         <!-- Main Content -->
         <main class="dashboard-main">
             <!-- KPIs Section -->
-            <section class="kpi-bar">
-                <div class="kpi-bar-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                        <polyline points="2 17 12 22 22 17"></polyline>
-                        <polyline points="2 12 12 17 22 12"></polyline>
-                    </svg>
-                </div>
-                <div class="kpi-bar-label">Porcentaje de avance</div>
-                <div class="kpi-bar-value" id="impactProgress">0%</div>
-                <div class="kpi-bar-track">
-                    <div class="kpi-bar-fill" id="impactProgressBar" style="width:0%"></div>
-                </div>
-                <div class="kpi-bar-subtitle">Avance ponderado por impacto contractual</div>
-            </section>
+            <div class="kpi-bar-row">
+                <section class="kpi-bar">
+                    <div class="kpi-bar-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                    </div>
+                    <div class="kpi-bar-label">Porcentaje de avance</div>
+                    <div class="kpi-bar-value" id="impactProgress">0%</div>
+                    <div class="kpi-bar-track">
+                        <div class="kpi-bar-fill" id="impactProgressBar" style="width:0%"></div>
+                    </div>
+                    <div class="kpi-bar-subtitle">Avance ponderado por impacto contractual</div>
+                </section>
+                <section class="kpi-bar kpi-bar-alt">
+                    <div class="kpi-bar-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="kpi-bar-label">Avance por completitud</div>
+                    <div class="kpi-bar-value" id="completitudProgress">0%</div>
+                    <div class="kpi-bar-track">
+                        <div class="kpi-bar-fill" id="completitudProgressBar" style="width:0%"></div>
+                    </div>
+                    <div class="kpi-bar-subtitle">Avance por aprobación y completitud de entregables</div>
+                </section>
+            </div>
 
             <!-- Delta vs cronograma planeado (sutil, informativo) -->
             <div class="baseline-delta" id="baselineDelta" style="display:none">
@@ -195,11 +211,40 @@
                                 <th>Etapa</th>
                                 <th class="text-center">Peso Contractual</th>
                                 <th class="text-center">Avance por Impacto</th>
+                                <th class="text-center">Avance por Completitud</th>
                                 <th class="text-center">Entregables</th>
                             </tr>
                         </thead>
                         <tbody id="deliverablesSummaryBody">
                             <!-- Rows calculated dynamically from deliverables_data.json -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Avance por Completitud de Entregables (según estado de aprobación) -->
+            <section class="stage-breakdown-section completitud-section">
+                <div class="section-header">
+                    <h2>Avance por Completitud de Entregables</h2>
+                    <p class="section-subtitle">Avance según el estado de aprobación de cada entregable. Cada producto cuenta igual, sin ponderar por su aporte contractual. Pesos por estado: En elaboración 70% · En revisión 85% · En ajuste 95% · Aprobado 100%.</p>
+                </div>
+                <div class="completitud-global-banner">
+                    <span class="completitud-global-label">Avance global por completitud</span>
+                    <span class="completitud-global-value" id="completitudGlobalValue">0%</span>
+                </div>
+                <div class="table-container">
+                    <table class="stage-table completitud-table">
+                        <thead>
+                            <tr>
+                                <th>Etapa</th>
+                                <th>Productos por estado</th>
+                                <th class="text-center">Productos</th>
+                                <th class="text-center">Peso en el proyecto</th>
+                                <th class="text-center">Avance de la etapa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="completitudSummaryBody">
+                            <!-- Rows calculated dynamically -->
                         </tbody>
                     </table>
                 </div>
@@ -464,6 +509,11 @@
                             <div class="report-kpi-value" id="reportPhysProgress">0%</div>
                             <div class="report-kpi-bar"><div class="report-kpi-fill report-kpi-fill-phys" id="reportPhysBar"></div></div>
                         </div>
+                        <div class="report-kpi-card">
+                            <div class="report-kpi-label">Avance por Completitud</div>
+                            <div class="report-kpi-value" id="reportCompletitudProgress">0%</div>
+                            <div class="report-kpi-bar"><div class="report-kpi-fill report-kpi-fill-comp" id="reportCompletitudBar"></div></div>
+                        </div>
                     </div>
                     <table class="report-table" id="reportStageTable">
                         <thead>
@@ -471,6 +521,7 @@
                                 <th>Etapa</th>
                                 <th class="text-center">Peso</th>
                                 <th class="text-center">Avance Actual</th>
+                                <th class="text-center">Completitud</th>
                                 <th class="text-center">Entregables</th>
                             </tr>
                         </thead>
