@@ -93,10 +93,6 @@ const COMPLETITUD_WEIGHTS = {
     'en_ajuste':      95,
     'aprobado':       100
 };
-// Factor de dilución para rondas reabiertas (revisión/ajuste adicionales).
-// Mayor K → incrementos más pequeños por cada ronda extra.
-const COMPLETITUD_DILUTION_K = 4;
-
 const ABSOLUTE_STATES = ['no_iniciado', 'enviado', 'aprobado'];
 const PROCESS_STATES  = ['en_elaboracion', 'en_revision', 'en_ajuste'];
 const MILESTONE_STATES = ['enviado', 'aprobado'];
@@ -585,46 +581,13 @@ function getDeliverableProgressFromCycles(del) {
 
 /**
  * Avance por Completitud de un entregable, en [0,100].
- * Pondera por el ESTADO del entregable (no por esfuerzo/actividades):
+ * Pondera por el ESTADO ACTUAL del entregable (no por esfuerzo/actividades):
  *   no_iniciado 0 · en_elaboracion/enviado 70 · en_revision 85 · en_ajuste 95 · aprobado 100
- * Regla monotónica: el valor NUNCA retrocede. Cuando se reabre una fase
- * (p.ej. una nueva ronda de revisión tras un ajuste) el avance no vuelve atrás,
- * sino que se "diluye" acercándose gradualmente a 100:
- *   avance = base + (100 - base) * rondasExtra / (rondasExtra + K)
- * Usa del.history (recorrido real) cuando existe; si no, el estado actual.
+ * Cada entregable cuenta igual; refleja únicamente el estado vigente.
  */
 function getCompletitudProgress(del) {
-    // Secuencia de estados recorridos, en orden cronológico
-    let seq = [];
-    if (Array.isArray(del.history) && del.history.length) {
-        seq = del.history
-            .filter(h => h && h.status && COMPLETITUD_WEIGHTS[h.status] !== undefined)
-            .slice()
-            .sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')))
-            .map(h => h.status);
-    }
-    const current = (del.status && COMPLETITUD_WEIGHTS[del.status] !== undefined) ? del.status : null;
-    if (current && (seq.length === 0 || seq[seq.length - 1] !== current)) seq.push(current);
-
-    // Estados "no_iniciado" no aportan recorrido
-    seq = seq.filter(s => s !== 'no_iniciado');
-    if (seq.length === 0) return 0;
-    if (current === 'aprobado' || seq.includes('aprobado')) return 100;
-
-    let base = 0, maxOrderIdx = -1, extraRounds = 0;
-    for (const s of seq) {
-        const idx = DEFAULT_PHASE_ORDER.indexOf(s);
-        if (idx > maxOrderIdx) {
-            // Avance hacia adelante: el piso sube al peso de esta fase
-            maxOrderIdx = idx;
-            base = COMPLETITUD_WEIGHTS[s];
-        } else {
-            // Fase repetida/reabierta: no retrocede, se diluye hacia 100
-            extraRounds++;
-        }
-    }
-    if (base >= 100) return 100;
-    return base + (100 - base) * extraRounds / (extraRounds + COMPLETITUD_DILUTION_K);
+    const st = (del.status && COMPLETITUD_WEIGHTS[del.status] !== undefined) ? del.status : 'no_iniciado';
+    return COMPLETITUD_WEIGHTS[st];
 }
 
 /**
